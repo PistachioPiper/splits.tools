@@ -54,18 +54,38 @@ async function onDrop(ev) {
     }
     console.log(segmentNames)
 
+    //generates list of pbSplits (split times in pbs)
+    let rtaPBSplits = []
+    let igtPBSplits = []
+    for (let i = 0; i < segmentsArray.length; i++) {
+        let segment = segmentsArray[i];
+        let SplitTimes = segment.querySelector('SplitTimes');
+        let pbSplits =  SplitTimes.querySelector("SplitTime[name='Personal Best']");
+        if (rtaTiming) {
+            let rtaPB = pbSplits.querySelector('RealTime').textContent;
+            rtaPBSplits.push(rtaPB)
+        }
+        if (igtTiming) {
+            let igtPB = pbSplits.querySelector('GameTime').textContent;
+            igtPBSplits.push(igtPB)
+        }
+    }
+    console.log(rtaPBSplits)
+    console.log(igtPBSplits)
+
+
     //generates list of rtaGolds and igtGolds
     let rtaGolds = []
     let igtGolds = []
     for (let i = 0; i < segmentsArray.length; i++) {
         let segment = segmentsArray[i];
-        let segmentGolds = segment.querySelector('BestSegmentTime').textContent;
+        let segmentGolds = segment.querySelector('BestSegmentTime');
         if (rtaTiming) {
-            let rtaGold = segment.querySelector('RealTime').textContent;
+            let rtaGold = segmentGolds.querySelector('RealTime').textContent;
             rtaGolds.push(rtaGold)
-          }
+        }
         if (igtTiming) {
-            let igtGold = segment.querySelector('RealTime').textContent;
+            let igtGold = segmentGolds.querySelector('GameTime').textContent;
             igtGolds.push(igtGold)
         }
     }
