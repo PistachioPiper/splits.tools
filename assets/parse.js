@@ -46,7 +46,6 @@ async function onDrop(ev) {
         let segment = segmentsArray[i];
         let segmentName = segment.querySelector('Name').textContent;
         segmentNames.push(segmentName)
-
         let pTag = document.createElement("p");
         pTag.innerText = segmentName;
         pTag.classList.add("my-fancy-class");
