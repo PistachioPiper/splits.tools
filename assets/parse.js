@@ -46,10 +46,6 @@ async function onDrop(ev) {
         let segment = segmentsArray[i];
         let segmentName = segment.querySelector('Name').textContent;
         segmentNames.push(segmentName)
-        let pTag = document.createElement("p");
-        pTag.innerText = segmentName;
-        pTag.classList.add("my-fancy-class");
-        dropZone.appendChild(pTag);
     }
     console.log(segmentNames)
 
@@ -90,6 +86,14 @@ async function onDrop(ev) {
     }
     console.log(rtaGolds)
     console.log(igtGolds)
+
+    for (let i = 0; i < segmentNames.length; i++) {
+        //creates ptags :3
+        let pTag = document.createElement("p");
+        pTag.innerText = segmentNames[i] + "PB Splits:" + "RTA" + rtaPBSplits[i] + "IGT" + igtPBSplits[i] + "Golds:" + "RTA" + rtaGolds[i] + "IGT" + igtGolds[i];
+        pTag.classList.add("my-fancy-class");
+        dropZone.appendChild(pTag);
+    }
 }
 
 //defines dropZone
