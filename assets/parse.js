@@ -13,6 +13,28 @@
 const TextDisplay = document.querySelector('p')
 console.log(TextDisplay.textContent)
 
+//for converting times from HMS.MS to SEC.MS
+function convert(hmsInput) {
+let hmsArray = hmsInput.split(":", 3)
+console.log(hmsArray)
+let secOutput = (parseInt(hmsArray[0]) * 3600) + (parseInt(hmsArray[1]) * 60) + parseFloat(hmsArray[2])
+console.log(secOutput)
+return secOutput;
+}
+
+function unconvert(secInput) {
+    let hmsSec = Number.parseFloat(secInput % 60).toFixed(6);
+    let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
+    let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
+    let hmsOutput = hmsHrs.toString() + ":" + hmsMin.toString() + ":" + hmsSec.toString()
+    console.log(hmsHrs)
+    console.log(hmsMin)
+    console.log(hmsSec)
+    console.log(hmsOutput)
+    return hmsOutput
+}
+
+//overriding default DragOver behavior
 function onDragOver(ev) {
     ev.preventDefault();
 }
@@ -39,6 +61,8 @@ async function onDrop(ev) {
     //check if RealTime/GameTime exist    
     let rtaTiming = segmentsElement.querySelector("RealTime") !== null;
     let igtTiming = segmentsElement.querySelector("GameTime") !== null;
+    let timingMethod = "" + rtaTiming + igtTiming;
+    console.log(timingMethod)
 
     //generates list of segmentNames
     let segmentNames = []
@@ -87,12 +111,35 @@ async function onDrop(ev) {
     console.log(rtaGolds)
     console.log(igtGolds)
 
+
+    //temp creating ptags
     for (let i = 0; i < segmentNames.length; i++) {
-        //creates ptags :3
         let pTag = document.createElement("p");
         pTag.innerText = segmentNames[i] + "PB Splits:" + "RTA" + rtaPBSplits[i] + "IGT" + igtPBSplits[i] + "Golds:" + "RTA" + rtaGolds[i] + "IGT" + igtGolds[i];
         pTag.classList.add("my-fancy-class");
         dropZone.appendChild(pTag);
+    }
+
+
+    //for later, switch to prune table
+    switch (timingMethod) {
+        case 'truefalse':
+            //case
+            break;
+        case 'truetrue':
+            //case
+            break;
+        case 'falsetrue':
+            //case
+            break;
+        case 'falsefalse':
+            let dropZone = document.querySelector(".drop-zone");
+            dropZone.innerHTML = "";
+            let pTag = document.createElement("p");
+            pTag.innerText = "how did you manage to make a livesplit file that doesn't use rta or igt timign? props to you"
+            pTag.classList.add("my-fancy-class");
+            dropZone.appendChild(pTag);
+            break;
     }
 }
 
