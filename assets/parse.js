@@ -121,17 +121,17 @@ async function onDrop(ev) {
     }
 
 
-    //for later, switch to prune table
+    //for later, switch to do table
     switch (timingMethod) {
         case 'truefalse':
             //case
-            break;
+        break;
         case 'truetrue':
             //case
-            break;
+        break;
         case 'falsetrue':
             //case
-            break;
+        break;
         case 'falsefalse':
             let dropZone = document.querySelector(".drop-zone");
             dropZone.innerHTML = "";
@@ -139,7 +139,7 @@ async function onDrop(ev) {
             pTag.innerText = "how did you manage to make a livesplit file that doesn't use rta or igt timign? props to you"
             pTag.classList.add("my-fancy-class");
             dropZone.appendChild(pTag);
-            break;
+        break;
     }
 }
 
