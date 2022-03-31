@@ -42,16 +42,21 @@ function ptagSet(ptagText) {
     pTag.classList.add("my-fancy-class");
     dropZone.appendChild(pTag);
 }
+
 /*
-<table class="splitTable"> <tr class="split-names">sdfh</tr>
-<tr class="rta-pb">dsfh</tr>
-<tr class="igt-pb">sdfh</tr>
-<tr class="rta-average">fsdh</tr>
-<tr class="igt-average">dsfgh</tr>
-<tr class="rta-gold">dsfh</tr>
-<tr class="igt-gold">sdfh</tr>
+<table class="splitTable"> 
+    <tr>
+        <td class="split-names"></td>
+        <td class="rta-pb"></td>
+        <td class="igt-pb"></td>
+        <td class="rta-average"></td>
+        <td class="igt-average"></td>
+        <td class="rta-gold"></td>
+        <td class="igt-gold"></td>
+    </tr>
 </table>
 */
+
 function tableSetup(timingMethod) {
     switch (timingMethod) {
         case 'truefalse':
