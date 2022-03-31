@@ -34,6 +34,11 @@ function unconvert(secInput) {
     return hmsOutput
 }
 
+function dropZoneClear() {
+    let dropZone = document.querySelector(".drop-zone");
+    dropZone.innerHTML = "";
+}
+
 function ptagSet(ptagText) {
     let dropZone = document.querySelector(".drop-zone");
     dropZone.innerHTML = "";
@@ -43,22 +48,7 @@ function ptagSet(ptagText) {
     dropZone.appendChild(pTag);
 }
 
-/*
-<table class="splitTable"> 
-    <tr>
-        <td class="split-names"></td>
-        <td class="rta-pb"></td>
-        <td class="igt-pb"></td>
-        <td class="rta-average"></td>
-        <td class="igt-average"></td>
-        <td class="rta-gold"></td>
-        <td class="igt-gold"></td>
-    </tr>
-</table>
-*/
-
-function tableSetup(timingMethod) {
-    switch (timingMethod) {
+    /*switch (timingMethod) {
         case 'truefalse':
             //case
         break;
@@ -71,6 +61,25 @@ function tableSetup(timingMethod) {
         case 'falsefalse':
             ptagSet("how did you manage to make a livesplit file that doesn't use rta or igt timing? props to you")
         break;
+    }*/
+
+
+function tableSet(timingMethod, segmentNames, rtaPBSplits, igtPBSplits, rtaGolds, igtGolds) {
+    let dropZone = document.querySelector(".drop-zone");
+    dropZone.appendChild(document.createElement("table"))
+    let dataTable = document.querySelector("table")
+    for (let i = 0; i < segmentNames.length; i++) {
+        let tableRow = document.createElement("tr");
+        tableRow.innerHTML = `        
+        <td class="split-names">${segmentNames[i]}</td>
+        <td class="rta-pb">${rtaPBSplits[i]}</td>
+        <td class="igt-pb">${igtPBSplits[i]}</td>
+        <td class="rta-average">$\{}</td>
+        <td class="igt-average">$\{}</td>
+        <td class="rta-gold">${rtaGolds[i]}</td>
+        <td class="igt-gold">${rtaGolds[i]}</td>`;
+        tableRow.classList.add("data-table");
+        dropZone.appendChild(tableRow);
     }
 }
 
@@ -195,7 +204,8 @@ async function onDrop(ev) {
 
 
     //Sets up the data table
-    tableSetup(timingMethod)
+    dropZoneClear()
+    tableSet(timingMethod, segmentNames, rtaPBSplits, igtPBSplits, rtaGolds, igtGolds)
 }
 
 //defines dropZone
