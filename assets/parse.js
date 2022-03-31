@@ -130,6 +130,15 @@ async function onDrop(ev) {
     console.log(rtaGolds)
     console.log(igtGolds)
 
+    //game+category
+    let gameCategory = splits.querySelector('GameName').textContent + " " + splits.querySelector('CategoryName').textContent
+    console.log(gameCategory)
+
+
+    //attemptCount
+    let attemptCount = splits.querySelector('AttemptCount').textContent
+    console.log(attemptCount)
+
 
     //temp creating ptags
     for (let i = 0; i < segmentNames.length; i++) {
