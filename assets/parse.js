@@ -15,11 +15,11 @@ console.log(TextDisplay.textContent)
 
 //for converting times from HMS.MS to SEC.MS
 function convert(hmsInput) {
-let hmsArray = hmsInput.split(":", 3)
-console.log(hmsArray)
-let secOutput = (parseInt(hmsArray[0]) * 3600) + (parseInt(hmsArray[1]) * 60) + parseFloat(hmsArray[2])
-console.log(secOutput)
-return secOutput;
+    let hmsArray = hmsInput.split(":", 3)
+    console.log(hmsArray)
+    let secOutput = (parseInt(hmsArray[0]) * 3600) + (parseInt(hmsArray[1]) * 60) + parseFloat(hmsArray[2])
+    console.log(secOutput)
+    return secOutput;
 }
 
 function unconvert(secInput) {
@@ -34,6 +34,23 @@ function unconvert(secInput) {
     return hmsOutput
 }
 
+let fileName
+let fileExtension
+function filecheck(ev) {
+    fileName = ev.dataTransfer.files[0].name
+    console.log(fileName)
+    let fileNameArray = fileName.split(".")
+    console.log(fileNameArray)
+    fileExtension = fileNameArray[fileNameArray.length - 1]
+    console.log(fileExtension)
+    if (fileExtension !== "lss") {
+        let pTag = document.createElement("p");
+        pTag.innerText = "Please try again and make sure your file is a LiveSplit Splits file with the .lss extension."
+        dropZone.appendChild(pTag);
+        return 0;
+    }
+}
+
 //overriding default DragOver behavior
 function onDragOver(ev) {
     ev.preventDefault();
@@ -45,6 +62,8 @@ async function onDrop(ev) {
     //nukes ptags on new file drop
     let dropZone = document.querySelector(".drop-zone");
     dropZone.innerHTML = "";
+
+    if (filecheck(ev) == 0) {return}
 
     //sets up xml file
     let files = ev.dataTransfer.files;
