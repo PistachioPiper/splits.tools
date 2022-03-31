@@ -34,19 +34,52 @@ function unconvert(secInput) {
     return hmsOutput
 }
 
+function ptagSet(ptagText) {
+    let dropZone = document.querySelector(".drop-zone");
+    dropZone.innerHTML = "";
+    let pTag = document.createElement("p");
+    pTag.innerText = ptagText
+    pTag.classList.add("my-fancy-class");
+    dropZone.appendChild(pTag);
+}
+/*
+<table class="splitTable"> <tr class="split-names">sdfh</tr>
+<tr class="rta-pb">dsfh</tr>
+<tr class="igt-pb">sdfh</tr>
+<tr class="rta-average">fsdh</tr>
+<tr class="igt-average">dsfgh</tr>
+<tr class="rta-gold">dsfh</tr>
+<tr class="igt-gold">sdfh</tr>
+</table>
+*/
+function tableSetup(timingMethod) {
+    switch (timingMethod) {
+        case 'truefalse':
+            //case
+        break;
+        case 'truetrue':
+            //case
+        break;
+        case 'falsetrue':
+            //case
+        break;
+        case 'falsefalse':
+            ptagSet("how did you manage to make a livesplit file that doesn't use rta or igt timing? props to you")
+        break;
+    }
+}
+
 let fileName
 let fileExtension
 function filecheck(ev) {
     fileName = ev.dataTransfer.files[0].name
     console.log(fileName)
     let fileNameArray = fileName.split(".")
-    console.log(fileNameArray)
     fileExtension = fileNameArray[fileNameArray.length - 1]
     console.log(fileExtension)
     if (fileExtension !== "lss") {
-        let pTag = document.createElement("p");
-        pTag.innerText = "Please try again and make sure your file is a LiveSplit Splits file with the .lss extension."
-        dropZone.appendChild(pTag);
+        console.log("File Extension Failure")
+        ptagSet("Please try again and make sure your file is a LiveSplit Splits file with the .lss extension.")
         return 0;
     }
 }
@@ -56,10 +89,12 @@ function onDragOver(ev) {
     ev.preventDefault();
 }
 
+//the main attraction starts here
+//yaboinga
 async function onDrop(ev) {
     ev.preventDefault();
     
-    //nukes ptags on new file drop
+    //nukes dropzone on file drop
     let dropZone = document.querySelector(".drop-zone");
     dropZone.innerHTML = "";
 
@@ -76,12 +111,25 @@ async function onDrop(ev) {
     //sets up segments
     let segmentsElement = splits.querySelector('Segments')
     let segmentsArray = segmentsElement.querySelectorAll('Segment')
-    
+
     //check if RealTime/GameTime exist    
     let rtaTiming = segmentsElement.querySelector("RealTime") !== null;
     let igtTiming = segmentsElement.querySelector("GameTime") !== null;
-    let timingMethod = "" + rtaTiming + igtTiming;
+    let timingMethod = "Timing Methods: " + rtaTiming + igtTiming;
     console.log(timingMethod)
+
+
+    
+    //game+category
+    let gameName = splits.querySelector('GameName').textContent
+    let categoryName = splits.querySelector('CategoryName').textContent
+    let gameCategory = gameName + " " + categoryName
+    console.log("Category: " + gameCategory)
+    
+    //attemptCount
+    let attemptCount = splits.querySelector('AttemptCount').textContent
+    console.log("Attemtps:" + attemptCount)
+
 
     //generates list of segmentNames
     let segmentNames = []
@@ -90,7 +138,7 @@ async function onDrop(ev) {
         let segmentName = segment.querySelector('Name').textContent;
         segmentNames.push(segmentName)
     }
-    console.log(segmentNames)
+    console.log("Segments: " + segmentNames)
 
     //generates list of pbSplits (split times in pbs)
     let rtaPBSplits = []
@@ -108,8 +156,8 @@ async function onDrop(ev) {
             igtPBSplits.push(igtPB)
         }
     }
-    console.log(rtaPBSplits)
-    console.log(igtPBSplits)
+    console.log("RTA PB Splits: " + rtaPBSplits)
+    console.log("IGT PB Splits: " + igtPBSplits)
 
 
     //generates list of rtaGolds and igtGolds
@@ -127,48 +175,22 @@ async function onDrop(ev) {
             igtGolds.push(igtGold)
         }
     }
-    console.log(rtaGolds)
-    console.log(igtGolds)
+    console.log("RTA Golds: " + rtaGolds)
+    console.log("IGT Golds: " + igtGolds)
 
-    //game+category
-    let gameCategory = splits.querySelector('GameName').textContent + " " + splits.querySelector('CategoryName').textContent
-    console.log(gameCategory)
-
-
-    //attemptCount
-    let attemptCount = splits.querySelector('AttemptCount').textContent
-    console.log(attemptCount)
 
 
     //temp creating ptags
     for (let i = 0; i < segmentNames.length; i++) {
         let pTag = document.createElement("p");
-        pTag.innerText = segmentNames[i] + "PB Splits:" + "RTA" + rtaPBSplits[i] + "IGT" + igtPBSplits[i] + "Golds:" + "RTA" + rtaGolds[i] + "IGT" + igtGolds[i];
+        pTag.innerText = segmentNames[i] + " PB Splits: " + "RTA " + rtaPBSplits[i] + "IGT " + igtPBSplits[i] + "Golds: " + "RTA " + rtaGolds[i] + "IGT " + igtGolds[i];
         pTag.classList.add("my-fancy-class");
         dropZone.appendChild(pTag);
     }
 
 
-    //for later, switch to do table
-    switch (timingMethod) {
-        case 'truefalse':
-            //case
-        break;
-        case 'truetrue':
-            //case
-        break;
-        case 'falsetrue':
-            //case
-        break;
-        case 'falsefalse':
-            let dropZone = document.querySelector(".drop-zone");
-            dropZone.innerHTML = "";
-            let pTag = document.createElement("p");
-            pTag.innerText = "how did you manage to make a livesplit file that doesn't use rta or igt timign? props to you"
-            pTag.classList.add("my-fancy-class");
-            dropZone.appendChild(pTag);
-        break;
-    }
+    //Sets up the data table
+    tableSetup(timingMethod)
 }
 
 //defines dropZone
