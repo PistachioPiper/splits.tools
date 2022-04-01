@@ -13,7 +13,7 @@
 const TextDisplay = document.querySelector('p')
 console.log(TextDisplay.textContent)
 
-//for converting times from HMS.MS to SEC.MS
+//converts HH:MM:SS.MS to SEC.MS
 function convert(hmsInput) {
     let hmsArray = hmsInput.split(":", 3)
     console.log(hmsArray)
@@ -34,11 +34,31 @@ function unconvert(secInput) {
     return hmsOutput
 }
 
+//converts SEC.MS to HH:MM:SS.MS
+function unconvert2DP(secInput) {
+    let hmsSec = Number.parseFloat(secInput % 60).toFixed(2);
+    let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
+    let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
+    let hmsOutput = hmsHrs.toString() + ":" + hmsMin.toString() + ":" + hmsSec.toString()
+    console.log(hmsHrs)
+    console.log(hmsMin)
+    console.log(hmsSec)
+    console.log(hmsOutput)
+    return hmsOutput
+}
+
+//im lazy so this makes times 2dp smiley face
+function timeFix(time) {
+    return unconvert2DP(convert(time));
+}
+
+//clears the dropZone
 function dropZoneClear() {
     let dropZone = document.querySelector(".drop-zone");
     dropZone.innerHTML = "";
 }
 
+//sets a ptag with specified text
 function ptagSet(ptagText) {
     let dropZone = document.querySelector(".drop-zone");
     dropZone.innerHTML = "";
@@ -55,7 +75,7 @@ function ptagSet(ptagText) {
         case 'truetrue':
             //case
         break;
-        case 'falsetrue':
+        case 'falsetrue': 
             //case
         break;
         case 'falsefalse':
@@ -63,26 +83,38 @@ function ptagSet(ptagText) {
         break;
     }*/
 
-
+//creates the output table
 function tableSet(timingMethod, segmentNames, rtaPBSplits, igtPBSplits, rtaGolds, igtGolds) {
     let dropZone = document.querySelector(".drop-zone");
-    dropZone.appendChild(document.createElement("table"))
+    dropZone.appendChild(document.createElement("tablewrapper"))
+    let wrapper = document.querySelector("tablewrapper")
+    wrapper.appendChild(document.createElement("table"))
     let dataTable = document.querySelector("table")
+    let headerRow = document.createElement("tr")
+    headerRow.innerHTML += `<td class="split-names">Segment Names</td>`
+    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-pb">RTA PB Splits</td>`}
+    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-pb">IGT PB Splits</td>`}
+    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-average">Average RTA Splits</td>`}
+    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-average">Average IGT Splits</td>`}
+    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-gold">RTA Golds</td>`}
+    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-gold">IGT Golds</td>`}
+    dataTable.appendChild(headerRow)
+
     for (let i = 0; i < segmentNames.length; i++) {
         let tableRow = document.createElement("tr");
-        tableRow.innerHTML = `        
-        <td class="split-names">${segmentNames[i]}</td>
-        <td class="rta-pb">${rtaPBSplits[i]}</td>
-        <td class="igt-pb">${igtPBSplits[i]}</td>
-        <td class="rta-average">$\{}</td>
-        <td class="igt-average">$\{}</td>
-        <td class="rta-gold">${rtaGolds[i]}</td>
-        <td class="igt-gold">${rtaGolds[i]}</td>`;
+        tableRow.innerHTML += `<td class="split-names">${segmentNames[i]}</td>`
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pb">${timeFix(rtaPBSplits[i])}</td>`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pb">${timeFix(igtPBSplits[i])}</td>`}
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-average">$\{}</td>`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-average">$\{}</td>`}
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-gold">${timeFix(rtaGolds[i])}</td>`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-gold">${timeFix(rtaGolds[i])}</td>`}
         tableRow.classList.add("data-table");
-        dropZone.appendChild(tableRow);
+        dataTable.appendChild(tableRow);
     }
 }
 
+//checks if the input file is an lss
 let fileName
 let fileExtension
 function filecheck(ev) {
@@ -129,8 +161,8 @@ async function onDrop(ev) {
     //check if RealTime/GameTime exist    
     let rtaTiming = segmentsElement.querySelector("RealTime") !== null;
     let igtTiming = segmentsElement.querySelector("GameTime") !== null;
-    let timingMethod = "Timing Methods: " + rtaTiming + igtTiming;
-    console.log(timingMethod)
+    let timingMethod = [rtaTiming, igtTiming];
+    console.log("Timing Methods: " + timingMethod)
 
 
     

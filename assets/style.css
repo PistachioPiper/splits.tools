@@ -44,6 +44,17 @@ p {
     padding:8px;
 }
 
+td, th {
+    padding:16px;
+}
+
+tablewrapper {
+    text-align: center;
+    display: table;
+    margin: auto;
+
+}
+
 .navbar {
     overflow: hidden;
     background-color: #202020;
