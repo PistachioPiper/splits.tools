@@ -16,9 +16,7 @@ console.log(TextDisplay.textContent)
 //converts HH:MM:SS.MS to SEC.MS
 function convert(hmsInput) {
     let hmsArray = hmsInput.split(":", 3)
-    console.log(hmsArray)
     let secOutput = (parseInt(hmsArray[0]) * 3600) + (parseInt(hmsArray[1]) * 60) + parseFloat(hmsArray[2])
-    console.log(secOutput)
     return secOutput;
 }
 
@@ -27,10 +25,6 @@ function unconvert(secInput) {
     let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
     let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
     let hmsOutput = hmsHrs.toString() + ":" + hmsMin.toString() + ":" + hmsSec.toString()
-    console.log(hmsHrs)
-    console.log(hmsMin)
-    console.log(hmsSec)
-    console.log(hmsOutput)
     return hmsOutput
 }
 
@@ -40,10 +34,6 @@ function unconvert2DP(secInput) {
     let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
     let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
     let hmsOutput = hmsHrs.toString() + ":" + hmsMin.toString() + ":" + hmsSec.toString()
-    console.log(hmsHrs)
-    console.log(hmsMin)
-    console.log(hmsSec)
-    console.log(hmsOutput)
     return hmsOutput
 }
 
