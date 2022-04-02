@@ -89,7 +89,6 @@ function tableSet(timingMethod, segmentNames, rtaPBSplits, igtPBSplits, rtaGolds
     if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-gold">RTA Golds</td>`}
     if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-gold">IGT Golds</td>`}
     dataTable.appendChild(headerRow)
-
     for (let i = 0; i < segmentNames.length; i++) {
         let tableRow = document.createElement("tr");
         tableRow.innerHTML += `<td class="split-names">${segmentNames[i]}</td>`
