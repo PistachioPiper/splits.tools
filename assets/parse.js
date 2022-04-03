@@ -165,7 +165,6 @@ async function onDrop(ev) {
     let attemptCount = splits.querySelector('AttemptCount').textContent
     console.log("Attemtps:" + attemptCount)
 
-
     //generates list of segmentNames
     let segmentNames = []
     for (let i = 0; i < segmentsArray.length; i++) {
@@ -215,13 +214,13 @@ async function onDrop(ev) {
 
 
 
-    //temp creating ptags
+    /*temp creating ptags
     for (let i = 0; i < segmentNames.length; i++) {
         let pTag = document.createElement("p");
-        pTag.innerText = segmentNames[i] + " PB Splits: " + "RTA " + rtaPBSplits[i] + "IGT " + igtPBSplits[i] + "Golds: " + "RTA " + rtaGolds[i] + "IGT " + igtGolds[i];
+        pTag.innerText =
         pTag.classList.add("my-fancy-class");
         dropZone.appendChild(pTag);
-    }
+    }*/
 
 
     //Sets up the data table
