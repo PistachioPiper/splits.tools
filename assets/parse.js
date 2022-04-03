@@ -58,23 +58,9 @@ function ptagSet(ptagText) {
     dropZone.appendChild(pTag);
 }
 
-    /*switch (timingMethod) {
-        case 'truefalse':
-            //case
-        break;
-        case 'truetrue':
-            //case
-        break;
-        case 'falsetrue': 
-            //case
-        break;
-        case 'falsefalse':
-            ptagSet("how did you manage to make a livesplit file that doesn't use rta or igt timing? props to you")
-        break;
-    }*/
 
 //creates the output table
-function tableSet(timingMethod, segmentNames, rtaPBSplits, igtPBSplits, rtaGolds, igtGolds) {
+function tableSet(timingMethod, segments) {
     let dropZone = document.querySelector(".drop-zone");
     dropZone.appendChild(document.createElement("tablewrapper"))
     let wrapper = document.querySelector("tablewrapper")
@@ -89,15 +75,15 @@ function tableSet(timingMethod, segmentNames, rtaPBSplits, igtPBSplits, rtaGolds
     if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-gold">RTA Golds</td>`}
     if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-gold">IGT Golds</td>`}
     dataTable.appendChild(headerRow)
-    for (let i = 0; i < segmentNames.length; i++) {
+    for (let i = 0; i < segments.length; i++) {
         let tableRow = document.createElement("tr");
-        tableRow.innerHTML += `<td class="split-names">${segmentNames[i]}</td>`
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pb">${timeFix(rtaPBSplits[i])}</td>`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pb">${timeFix(igtPBSplits[i])}</td>`}
+        tableRow.innerHTML += `<td class="split-names">${segments[i].name}</td>`
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pb">${timeFix(segments[i].rtapb)}</td>`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pb">${timeFix(segments[i].igtpb)}</td>`}
         if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-average">$\{}</td>`}
         if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-average">$\{}</td>`}
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-gold">${timeFix(rtaGolds[i])}</td>`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-gold">${timeFix(rtaGolds[i])}</td>`}
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-gold">${timeFix(segments[i].rtagold)}</td>`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-gold">${timeFix(segments[i].igtgold)}</td>`}
         tableRow.classList.add("data-table");
         dataTable.appendChild(tableRow);
     }
@@ -143,75 +129,58 @@ async function onDrop(ev) {
     let splits = parser.parseFromString(fileText, 'application/xml');
     console.log(splits)
 
-    //sets up segments
-    let segmentsElement = splits.querySelector('Segments')
-    let segmentsArray = segmentsElement.querySelectorAll('Segment')
+
+        //game+category
+        let gameName = splits.querySelector('GameName').textContent
+        let categoryName = splits.querySelector('CategoryName').textContent
+        let gameCategory = gameName + " " + categoryName
+        console.log("Category: " + gameCategory)
+        
+        //attemptCount
+        let attemptCount = splits.querySelector('AttemptCount').textContent
+        console.log("Attemtps:" + attemptCount)
+
 
     //check if RealTime/GameTime exist    
-    let rtaTiming = segmentsElement.querySelector("RealTime") !== null;
-    let igtTiming = segmentsElement.querySelector("GameTime") !== null;
+    let rtaTiming = splits.querySelector("RealTime") !== null;
+    let igtTiming = splits.querySelector("GameTime") !== null;
     let timingMethod = [rtaTiming, igtTiming];
-    console.log("Timing Methods: " + timingMethod)
+    console.log("Timing Methods: " + "RTA=" + timingMethod[0] + " IGT=" + timingMethod[1])
+    console.log(timingMethod)
 
-
-    
-    //game+category
-    let gameName = splits.querySelector('GameName').textContent
-    let categoryName = splits.querySelector('CategoryName').textContent
-    let gameCategory = gameName + " " + categoryName
-    console.log("Category: " + gameCategory)
-    
-    //attemptCount
-    let attemptCount = splits.querySelector('AttemptCount').textContent
-    console.log("Attemtps:" + attemptCount)
-
-    //generates list of segmentNames
-    let segmentNames = []
-    for (let i = 0; i < segmentsArray.length; i++) {
-        let segment = segmentsArray[i];
-        let segmentName = segment.querySelector('Name').textContent;
-        segmentNames.push(segmentName)
-    }
-    console.log("Segments: " + segmentNames)
-
-    //generates list of pbSplits (split times in pbs)
-    let rtaPBSplits = []
-    let igtPBSplits = []
-    for (let i = 0; i < segmentsArray.length; i++) {
-        let segment = segmentsArray[i];
-        let SplitTimes = segment.querySelector('SplitTimes');
-        let pbSplits =  SplitTimes.querySelector("SplitTime[name='Personal Best']");
-        if (rtaTiming) {
-            let rtaPB = pbSplits.querySelector('RealTime').textContent;
-            rtaPBSplits.push(rtaPB)
-        }
-        if (igtTiming) {
-            let igtPB = pbSplits.querySelector('GameTime').textContent;
-            igtPBSplits.push(igtPB)
+    //sets up segments
+    let segments = []
+    for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+        let timing = "" + timingMethod[0] + timingMethod[1] 
+        switch (timing) {
+            case "truetrue" :
+                segments[i] = {
+                    data: splits.querySelectorAll('Segment')[i], 
+                    name: splits.querySelectorAll('Name')[i].textContent,
+                    rtapb: splits.querySelectorAll("SplitTime[name='Personal Best']")[i].querySelector('RealTime').textContent,
+                    igtpb: splits.querySelectorAll("SplitTime[name='Personal Best']")[i].querySelector('GameTime').textContent,
+                    rtagold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent,
+                    igtgold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent,
+                }
+            break;
+            case "truefalse" :
+                segments[i] = {
+                    data: splits.querySelectorAll('Segment')[i], 
+                    name: splits.querySelectorAll('Name')[i].textContent,
+                    rtapb: splits.querySelectorAll("SplitTime[name='Personal Best']")[i].querySelector('RealTime').textContent,
+                    rtagold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent,
+                }
+            break;
+            case "falsetrue" :
+                segments[i] = {
+                    data: splits.querySelectorAll('Segment')[i], 
+                    name: splits.querySelectorAll('Name')[i].textContent,
+                    igtpb: splits.querySelectorAll("SplitTime[name='Personal Best']")[i].querySelector('GameTime').textContent,
+                    igtgold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent,
+                }
+            break;
         }
     }
-    console.log("RTA PB Splits: " + rtaPBSplits)
-    console.log("IGT PB Splits: " + igtPBSplits)
-
-
-    //generates list of rtaGolds and igtGolds
-    let rtaGolds = []
-    let igtGolds = []
-    for (let i = 0; i < segmentsArray.length; i++) {
-        let segment = segmentsArray[i];
-        let segmentGolds = segment.querySelector('BestSegmentTime');
-        if (rtaTiming) {
-            let rtaGold = segmentGolds.querySelector('RealTime').textContent;
-            rtaGolds.push(rtaGold)
-        }
-        if (igtTiming) {
-            let igtGold = segmentGolds.querySelector('GameTime').textContent;
-            igtGolds.push(igtGold)
-        }
-    }
-    console.log("RTA Golds: " + rtaGolds)
-    console.log("IGT Golds: " + igtGolds)
-
 
 
     /*temp creating ptags
@@ -222,10 +191,9 @@ async function onDrop(ev) {
         dropZone.appendChild(pTag);
     }*/
 
-
     //Sets up the data table
     dropZoneClear()
-    tableSet(timingMethod, segmentNames, rtaPBSplits, igtPBSplits, rtaGolds, igtGolds)
+    tableSet(timingMethod, segments)
 }
 
 //defines dropZone
