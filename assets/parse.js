@@ -68,12 +68,12 @@ function tableSet(timingMethod, segments) {
     let dataTable = document.querySelector("table")
     let headerRow = document.createElement("tr")
     headerRow.innerHTML += `<td class="split-names">Segment Names</td>`
-    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-pb">RTA PB Splits</td>`}
-    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-pb">IGT PB Splits</td>`}
-    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-average">Average RTA Splits</td>`}
-    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-average">Average IGT Splits</td>`}
-    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-gold">RTA Golds</td>`}
-    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-gold">IGT Golds</td>`}
+    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-pb">RTA Segment in PB</td>`}
+    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-pb">IGT Segment in PB</td>`}
+    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-average">Average Segment RTA</td>`}
+    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-average">Average Segment IGT</td>`}
+    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-gold">RTA Gold</td>`}
+    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-gold">IGT Gold</td>`}
     dataTable.appendChild(headerRow)
     for (let i = 0; i < segments.length; i++) {
         let tableRow = document.createElement("tr");
