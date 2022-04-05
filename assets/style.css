@@ -46,6 +46,11 @@ p {
 
 td, th {
     padding:16px;
+    text-align: right;
+}
+
+.split-names {
+    text-align: left;
 }
 
 tablewrapper {
