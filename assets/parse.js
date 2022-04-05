@@ -24,7 +24,7 @@ function unconvert(secInput) {
     let hmsSec = Number.parseFloat(secInput % 60).toFixed(6);
     let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
     let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
-    let hmsOutput = hmsHrs.toString() + ":" + hmsMin.toString() + ":" + hmsSec.toString()
+    let hmsOutput = hmsHrs.toString().padStart(2, '0') + ":" + hmsMin.toString().padStart(2, '0') + ":" + hmsSec.toString().padStart(9, '0')
     return hmsOutput
 }
 
@@ -33,7 +33,9 @@ function unconvert2DP(secInput) {
     let hmsSec = Number.parseFloat(secInput % 60).toFixed(2);
     let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
     let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
-    let hmsOutput = hmsHrs.toString() + ":" + hmsMin.toString() + ":" + hmsSec.toString()
+    let hmsOutput = hmsSec.toString().padStart(5, '0')
+    if (hmsMin !== 0) {hmsOutput = hmsMin.toString().padStart(2, '0') + ":" + hmsOutput}
+    if (hmsHrs !== 0) {hmsOutput = hmsHrs.toString().padStart(2, '0') + ":" + hmsOutput}
     return hmsOutput
 }
 
@@ -68,8 +70,8 @@ function tableSet(timingMethod, segments) {
     let dataTable = document.querySelector("table")
     let headerRow = document.createElement("tr")
     headerRow.innerHTML += `<td class="split-names">Segment Names</td>`
-    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-pb">RTA Segment in PB</td>`}
-    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-pb">IGT Segment in PB</td>`}
+    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-pb">RTA Split in PB</td>`}
+    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-pb">IGT Split in PB</td>`}
     if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-average">Average Segment RTA</td>`}
     if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-average">Average Segment IGT</td>`}
     if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-gold">RTA Gold</td>`}
@@ -80,8 +82,8 @@ function tableSet(timingMethod, segments) {
         tableRow.innerHTML += `<td class="split-names">${segments[i].name}</td>`
         if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pb">${timeFix(segments[i].rtapb)}</td>`}
         if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pb">${timeFix(segments[i].igtpb)}</td>`}
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-average">$\{}</td>`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-average">$\{}</td>`}
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-average">${timeFix(segments[i].rtaaverage)}`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-average">${timeFix(segments[i].igtaverage)}`}
         if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-gold">${timeFix(segments[i].rtagold)}</td>`}
         if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-gold">${timeFix(segments[i].igtgold)}</td>`}
         tableRow.classList.add("data-table");
@@ -93,16 +95,21 @@ function tableSet(timingMethod, segments) {
 let fileName
 let fileExtension
 function filecheck(ev) {
+    if (ev.dataTransfer.files.length == 0) {
+        return 0
+    }
     fileName = ev.dataTransfer.files[0].name
     console.log(fileName)
     let fileNameArray = fileName.split(".")
     fileExtension = fileNameArray[fileNameArray.length - 1]
     console.log(fileExtension)
+    
     if (fileExtension !== "lss") {
         console.log("File Extension Failure")
         ptagSet("Please try again and make sure your file is a LiveSplit Splits file with the .lss extension.")
         return 0;
     }
+    return 1;
 }
 
 //overriding default DragOver behavior
@@ -114,12 +121,13 @@ function onDragOver(ev) {
 //yaboinga
 async function onDrop(ev) {
     ev.preventDefault();
-    
+    if (filecheck(ev) == 0) {return}
+
     //nukes dropzone on file drop
     let dropZone = document.querySelector(".drop-zone");
     dropZone.innerHTML = "";
 
-    if (filecheck(ev) == 0) {return}
+
 
     //sets up xml file
     let files = ev.dataTransfer.files;
@@ -146,12 +154,22 @@ async function onDrop(ev) {
     let igtTiming = splits.querySelector("GameTime") !== null;
     let timingMethod = [rtaTiming, igtTiming];
     console.log("Timing Methods: " + "RTA=" + timingMethod[0] + " IGT=" + timingMethod[1])
-    console.log(timingMethod)
 
     //sets up segments
     let segments = []
     for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
         let timing = "" + timingMethod[0] + timingMethod[1] 
+        let SegmentHistory = splits.querySelectorAll('SegmentHistory')
+        let rtaHistory = SegmentHistory[i].querySelectorAll('RealTime')
+        let igtHistory = SegmentHistory[i].querySelectorAll('GameTime')
+        let rtaTemp = 0
+        let igtTemp = 0
+        for(j = 0; j < rtaHistory.length; j++) {
+            rtaTemp = rtaTemp + convert(rtaHistory[j].textContent)
+        }
+        for(j = 0; j < igtHistory.length; j++) {
+            igtTemp = igtTemp + convert(igtHistory[j].textContent)
+        }
         switch (timing) {
             case "truetrue" :
                 segments[i] = {
@@ -161,6 +179,8 @@ async function onDrop(ev) {
                     igtpb: splits.querySelectorAll("SplitTime[name='Personal Best']")[i].querySelector('GameTime').textContent,
                     rtagold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent,
                     igtgold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent,
+                    rtaaverage: unconvert(rtaTemp / rtaHistory.length),
+                    igtaverage: unconvert(igtTemp / igtHistory.length)
                 }
             break;
             case "truefalse" :
@@ -169,6 +189,7 @@ async function onDrop(ev) {
                     name: splits.querySelectorAll('Name')[i].textContent,
                     rtapb: splits.querySelectorAll("SplitTime[name='Personal Best']")[i].querySelector('RealTime').textContent,
                     rtagold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent,
+                    rtaaverage: unconvert(rtaTemp / rtaHistory.length),
                 }
             break;
             case "falsetrue" :
@@ -177,6 +198,7 @@ async function onDrop(ev) {
                     name: splits.querySelectorAll('Name')[i].textContent,
                     igtpb: splits.querySelectorAll("SplitTime[name='Personal Best']")[i].querySelector('GameTime').textContent,
                     igtgold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent,
+                    igtaverage: unconvert(igtTemp / igtHistory.length)
                 }
             break;
         }
