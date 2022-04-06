@@ -51,6 +51,15 @@ td, th {
 
 .split-names {
     text-align: left;
+    overflow-wrap: break-word;
+    max-width: 300px;
+}
+
+.interface-header {
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 32px;
 }
 
 tablewrapper {

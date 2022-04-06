@@ -21,7 +21,7 @@ function convert(hmsInput) {
 }
 
 function unconvert(secInput) {
-    let hmsSec = Number.parseFloat(secInput % 60).toFixed(6);
+    let hmsSec = (secInput % 60).toFixed(6);
     let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
     let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
     let hmsOutput = hmsHrs.toString().padStart(2, '0') + ":" + hmsMin.toString().padStart(2, '0') + ":" + hmsSec.toString().padStart(9, '0')
@@ -213,9 +213,18 @@ async function onDrop(ev) {
         dropZone.appendChild(pTag);
     }*/
 
-    //Sets up the data table
+    //Sets up the interface
     dropZoneClear()
+
+    dropZone = document.querySelector(".drop-zone");
+    let headerTag = document.createElement("h2");
+    headerTag.innerText = gameCategory
+    headerTag.classList.add("interface-header");
+    dropZone.appendChild(headerTag);
+
     tableSet(timingMethod, segments)
+
+
 }
 
 //defines dropZone
