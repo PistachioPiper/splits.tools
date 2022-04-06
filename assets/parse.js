@@ -143,6 +143,15 @@ async function onDrop(ev) {
         let categoryName = splits.querySelector('CategoryName').textContent
         let gameCategory = gameName + " " + categoryName
         console.log("Category: " + gameCategory)
+
+        //sets background image (async)
+        let urlComponent = encodeURIComponent(gameName)
+        fetch(`https://www.speedrun.com/api/v1/games?name=${urlComponent}`)
+            .then((resp) => resp.json())
+            .then((x) => {
+                let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
+                document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
+            })
         
         //attemptCount
         let attemptCount = splits.querySelector('AttemptCount').textContent
@@ -223,10 +232,7 @@ async function onDrop(ev) {
     dropZone.appendChild(headerTag);
 
     tableSet(timingMethod, segments)
-
-
 }
-
 //defines dropZone
 let dropZone = document.querySelector(".drop-zone");
 dropZone.addEventListener("dragover", onDragOver);

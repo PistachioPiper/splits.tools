@@ -55,6 +55,19 @@ td, th {
     max-width: 300px;
 }
 
+.background-image {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    display: block;
+    width: 1200px;
+    height: 800px;
+    filter: blur(5px) brightness(20%);
+    width: 100vw;
+    height: 100vh;
+}
+
 .interface-header {
     text-align: center;
     margin: 0px;
@@ -228,6 +241,12 @@ a:hover {
 }
 
 .drop-zone {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    margin-left: 0px;
+    margin-right: 0px;
     width: 100vw;
     height: 100vh;
 }
