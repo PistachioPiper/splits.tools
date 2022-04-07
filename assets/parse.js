@@ -159,8 +159,8 @@ async function onDrop(ev) {
 
 
     //check if RealTime/GameTime exist    
-    let rtaTiming = splits.querySelector("RealTime") !== null;
-    let igtTiming = splits.querySelector("GameTime") !== null;
+    let rtaTiming = splits.querySelector('Segments').querySelector("RealTime") !== null;
+    let igtTiming = splits.querySelector('Segments').querySelector("GameTime") !== null;
     let timingMethod = [rtaTiming, igtTiming];
     console.log("Timing Methods: " + "RTA=" + timingMethod[0] + " IGT=" + timingMethod[1])
 
@@ -227,7 +227,7 @@ async function onDrop(ev) {
 
     dropZone = document.querySelector(".drop-zone");
     let headerTag = document.createElement("h2");
-    headerTag.innerText = gameCategory
+    headerTag.innerText = gameName + ": " + categoryName
     headerTag.classList.add("interface-header");
     dropZone.appendChild(headerTag);
 

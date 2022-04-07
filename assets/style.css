@@ -17,27 +17,6 @@ body {
     margin: 0;
 }
 
-#playerID {
-    aspect-ratio: 16/9;
-    width: 900px;
-}
-
-@media only screen and (max-width: 950px) {
-    #playerID {
-        width: 600px;
-    }
-}
-
-@media only screen and (max-width: 610px) {
-    #playerID {
-        width: 100%;
-    }
-}
-
-h1 {
-    padding-top: 50px;
-}
-
 p {
     font-size: 14px;
     margin: 0;
@@ -63,7 +42,7 @@ td, th {
     display: block;
     width: 1200px;
     height: 800px;
-    filter: blur(5px) brightness(20%);
+    filter: blur(7px) brightness(20%);
     width: 100vw;
     height: 100vh;
 }
@@ -81,6 +60,75 @@ tablewrapper {
     margin: auto;
     padding: 32px 0px;
 
+}
+
+.drop-zone {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+a {
+    color: lightskyblue;
+}
+
+a:visited {
+    color: lightskyblue;
+}
+
+a:hover {
+    color: fuchsia;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#playerID {
+    aspect-ratio: 16/9;
+    width: 900px;
+}
+
+@media only screen and (max-width: 950px) {
+    #playerID {
+        width: 600px;
+    }
+}
+
+@media only screen and (max-width: 610px) {
+    #playerID {
+        width: 100%;
+    }
+}
+
+h1 {
+    padding-top: 50px;
 }
 
 .navbar {
@@ -105,18 +153,6 @@ tablewrapper {
     height: 100%;
     text-align: center;
 
-}
-
-a {
-    color: lightskyblue;
-}
-
-a:visited {
-    color: lightskyblue;
-}
-
-a:hover {
-    color: fuchsia;
 }
 
 .navbar a {
@@ -238,15 +274,4 @@ a:hover {
     .project {
         max-width: 100%;
     }
-}
-
-.drop-zone {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    margin-left: 0px;
-    margin-right: 0px;
-    width: 100vw;
-    height: 100vh;
 }
