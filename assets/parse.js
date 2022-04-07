@@ -163,6 +163,10 @@ async function onDrop(ev) {
     let igtTiming = splits.querySelector('Segments').querySelector("GameTime") !== null;
     let timingMethod = [rtaTiming, igtTiming];
     console.log("Timing Methods: " + "RTA=" + timingMethod[0] + " IGT=" + timingMethod[1])
+    if (!timingMethod[0] && !timingMethod[1]){
+        ptagSet("You managed to not have real time *or* game time in your splits. congrats?");
+        return;
+    }
 
     //sets up segments
     let segments = []
@@ -212,15 +216,6 @@ async function onDrop(ev) {
             break;
         }
     }
-
-
-    /*temp creating ptags
-    for (let i = 0; i < segmentNames.length; i++) {
-        let pTag = document.createElement("p");
-        pTag.innerText =
-        pTag.classList.add("my-fancy-class");
-        dropZone.appendChild(pTag);
-    }*/
 
     //Sets up the interface
     dropZoneClear()
