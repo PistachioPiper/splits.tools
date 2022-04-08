@@ -23,6 +23,11 @@ p {
     padding:8px;
 }
 
+h2 {
+    font-family: Moon;
+
+}
+
 td, th {
     padding:16px;
     text-align: right;
@@ -59,7 +64,6 @@ tablewrapper {
     display: table;
     margin: auto;
     padding: 32px 0px;
-
 }
 
 .drop-zone {
@@ -72,6 +76,7 @@ tablewrapper {
     width: 100vw;
     height: 100vh;
     overflow-y: auto;
+    font-family: Mario;
 }
 
 a {
