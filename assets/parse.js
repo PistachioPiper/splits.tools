@@ -83,15 +83,15 @@ function tableSet(timingMethod, segments) {
     for (let i = 0; i < segments.length; i++) {
         let tableRow = document.createElement("tr");
         tableRow.innerHTML += `<td class="split-names">${segments[i].name}</td>`
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pb">${timeFix(segments[i].rtapb)}</td>`}
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pbseg">${timeFix(segments[i].rtapbSegments)}</td>`}
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-average">${timeFix(segments[i].rtaaverage)}`}
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-gold">${timeFix(segments[i].rtagold)}</td>`}
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pb">${unconvert2DP(segments[i].rtapb)}</td>`}
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pbseg">${unconvert2DP(segments[i].rtapbSegments)}</td>`}
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-average">${unconvert2DP(segments[i].rtaaverage)}`}
+        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-gold">${unconvert2DP(segments[i].rtagold)}</td>`}
 
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pb">${timeFix(segments[i].igtpb)}</td>`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pbseg">${timeFix(segments[i].igtpbSegments)}</td>`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-average">${timeFix(segments[i].igtaverage)}`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-gold">${timeFix(segments[i].igtgold)}</td>`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pb">${unconvert2DP(segments[i].igtpb)}</td>`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pbseg">${unconvert2DP(segments[i].igtpbSegments)}</td>`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-average">${unconvert2DP(segments[i].igtaverage)}`}
+        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-gold">${unconvert2DP(segments[i].igtgold)}</td>`}
         tableRow.classList.add("data-table");
         dataTable.appendChild(tableRow);
     }
@@ -183,34 +183,30 @@ async function onDrop(ev) {
         for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
             let rtaHistory = SegmentHistory[i].querySelectorAll('RealTime')
             let igtHistory = SegmentHistory[i].querySelectorAll('GameTime')
-            let rtaTemp = 0
-            let igtTemp = 0
             let rtapbSegment
             let igtpbSegment
-
             let currentpbSplit = splits.querySelectorAll("SplitTime[name='Personal Best']")[i]
             let prevPbSplit = splits.querySelectorAll("SplitTime[name='Personal Best']")[i - 1]
             
             if (timingMethod[0]) {
                 let currentRealTime = currentpbSplit.querySelector('RealTime').textContent
-                if (i === 0 && currentRealTime) {rtapbSegment = currentRealTime}
+                if (i === 0 && currentRealTime) {rtapbSegment = convert(currentRealTime)}
                 if (i > 0 && currentRealTime && prevPbSplit.querySelector('RealTime').textContent) {
                     let previousRealTime = prevPbSplit.querySelector('RealTime').textContent
-                    rtapbSegment = unconvert(convert(currentRealTime) - convert(previousRealTime))
+                    rtapbSegment = convert(currentRealTime) - convert(previousRealTime)
                 }
             }
             if (timingMethod[1]) {
                 let currentGameTime = currentpbSplit.querySelector('GameTime').textContent
-                if (i === 0 && currentGameTime) {igtpbSegment = currentGameTime}
+                if (i === 0 && currentGameTime) {igtpbSegment = convert(currentGameTime)}
                 if (i > 0 && currentGameTime && prevPbSplit.querySelector('GameTime').textContent) {
                     let previousGameTime = prevPbSplit.querySelector('GameTime').textContent
-                    igtpbSegment = unconvert(convert(currentGameTime) - convert(previousGameTime))
+                    igtpbSegment = convert(currentGameTime) - convert(previousGameTime)
                 }
             }
 
-
-
-
+            let rtaTemp = 0
+            let igtTemp = 0
             for(j = 0; j < rtaHistory.length; j++) {
                 rtaTemp = rtaTemp + convert(rtaHistory[j].textContent)
             }
@@ -222,37 +218,38 @@ async function onDrop(ev) {
                     segments[i] = {
                         data: splits.querySelectorAll('Segment')[i], 
                         name: splits.querySelectorAll('Name')[i].textContent,
-                        rtapb: currentpbSplit.querySelector('RealTime').textContent,
-                        igtpb: currentpbSplit.querySelector('GameTime').textContent,
+                        rtapb: convert(currentpbSplit.querySelector('RealTime').textContent),
+                        igtpb: convert(currentpbSplit.querySelector('GameTime').textContent),
                         rtapbSegments: rtapbSegment,
                         igtpbSegments: igtpbSegment,
-                        rtagold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent,
-                        igtgold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent,
-                        rtaaverage: unconvert(rtaTemp / rtaHistory.length),
-                        igtaverage: unconvert(igtTemp / igtHistory.length),
+                        rtagold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent),
+                        igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent),
+                        rtaaverage: rtaTemp / rtaHistory.length,
+                        igtaverage: igtTemp / igtHistory.length,
                     }
                 break;
                 case "truefalse" :
                     segments[i] = {
                         data: splits.querySelectorAll('Segment')[i], 
                         name: splits.querySelectorAll('Name')[i].textContent,
-                        rtapb: currentpbSplit.querySelector('RealTime').textContent,
+                        rtapb: convert(currentpbSplit.querySelector('RealTime').textContent),
                         rtapbSegments: rtapbSegment,
-                        rtagold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent,
-                        rtaaverage: unconvert(rtaTemp / rtaHistory.length),
+                        rtagold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent),
+                        rtaaverage: rtaTemp / rtaHistory.length,
                     }
                 break;
                 case "falsetrue" :
                     segments[i] = {
                         data: splits.querySelectorAll('Segment')[i], 
                         name: splits.querySelectorAll('Name')[i].textContent,
-                        igtpb: currentpbSplit.querySelector('GameTime').textContent,
+                        igtpb: convert(currentpbSplit.querySelector('GameTime').textContent),
                         igtpbSegments: igtpbSegment,
-                        igtgold: splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent,
-                        igtaverage: unconvert(igtTemp / igtHistory.length),
+                        igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent),
+                        igtaverage: igtTemp / igtHistory.length,
                     }
                 break;
             }
+            console.log(segments)
         }
     }
 
