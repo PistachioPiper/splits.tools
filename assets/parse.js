@@ -15,12 +15,14 @@ console.log(TextDisplay.textContent)
 
 //converts HH:MM:SS.MS to SEC.MS
 function convert(hmsInput) {
+    if (hmsInput == null) {return null}
     let hmsArray = hmsInput.split(":", 3)
     let secOutput = (parseInt(hmsArray[0]) * 3600) + (parseInt(hmsArray[1]) * 60) + parseFloat(hmsArray[2])
     return secOutput;
 }
 
 function unconvert(secInput) {
+    if (secInput == null) {return null}
     let hmsSec = (secInput % 60).toFixed(6);
     let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
     let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
@@ -30,6 +32,7 @@ function unconvert(secInput) {
 
 //converts SEC.MS to HH:MM:SS.MS
 function unconvert2DP(secInput) {
+    if (secInput == null) {return ""}
     let hmsSec = Number.parseFloat(secInput % 60).toFixed(2);
     let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
     let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
@@ -189,71 +192,90 @@ async function onDrop(ev) {
             let prevPbSplit = splits.querySelectorAll("SplitTime[name='Personal Best']")[i - 1]
             
             if (timingMethod[0]) {
-                let currentRealTime = currentpbSplit.querySelector('RealTime').textContent
+                let currentRealTime = currentpbSplit.querySelector('RealTime')?.textContent
+                let prevRealTime = prevPbSplit?.querySelector('RealTime')?.textContent
                 if (i === 0 && currentRealTime) {rtapbSegment = convert(currentRealTime)}
-                if (i > 0 && currentRealTime && prevPbSplit.querySelector('RealTime').textContent) {
-                    let previousRealTime = prevPbSplit.querySelector('RealTime').textContent
-                    rtapbSegment = convert(currentRealTime) - convert(previousRealTime)
+                if (i > 0 && currentRealTime) {
+                    for (k = i - 1; k >= 0; k--) {
+                        let previousRealTime = splits.querySelectorAll("SplitTime[name='Personal Best']")[k].querySelector('RealTime')?.textContent;
+                        if (previousRealTime != null) {
+                            rtapbSegment = convert(currentRealTime) - convert(previousRealTime) 
+                            break;
+                        }
+                    }
                 }
+
             }
             if (timingMethod[1]) {
-                let currentGameTime = currentpbSplit.querySelector('GameTime').textContent
+                let currentGameTime = currentpbSplit.querySelector('GameTime')?.textContent
+                let prevGameTime = prevPbSplit?.querySelector('GameTime')?.textContent
                 if (i === 0 && currentGameTime) {igtpbSegment = convert(currentGameTime)}
-                if (i > 0 && currentGameTime && prevPbSplit.querySelector('GameTime').textContent) {
-                    let previousGameTime = prevPbSplit.querySelector('GameTime').textContent
-                    igtpbSegment = convert(currentGameTime) - convert(previousGameTime)
+                if (i > 0 && currentGameTime) {
+                    for (k = i - 1; k >= 0; k--) {
+                        let previousGameTime = splits.querySelectorAll("SplitTime[name='Personal Best']")[k].querySelector('GameTime')?.textContent;
+                        if (previousGameTime != null) {
+                            igtpbSegment = convert(currentGameTime) - convert(previousGameTime) 
+                            break;
+                        }
+                    }
                 }
             }
-
             let rtaTemp = 0
             let igtTemp = 0
             for(j = 0; j < rtaHistory.length; j++) {
-                rtaTemp = rtaTemp + convert(rtaHistory[j].textContent)
+                rtaTemp = rtaTemp + convert(rtaHistory[j]?.textContent)
             }
             for(j = 0; j < igtHistory.length; j++) {
-                igtTemp = igtTemp + convert(igtHistory[j].textContent)
+                igtTemp = igtTemp + convert(igtHistory[j]?.textContent)
             }
+            let rtaAverage = rtaTemp / rtaHistory.length
+            let igtAverage = igtTemp / igtHistory.length
+            if (rtaHistory.length == 0) {rtaAverage = null;}
+            if (igtHistory.length == 0) {igtAverage = null;}
+
             switch (timing) {
                 case "truetrue" :
                     segments[i] = {
                         data: splits.querySelectorAll('Segment')[i], 
                         name: splits.querySelectorAll('Name')[i].textContent,
-                        rtapb: convert(currentpbSplit.querySelector('RealTime').textContent),
-                        igtpb: convert(currentpbSplit.querySelector('GameTime').textContent),
+                        rtapb: convert(currentpbSplit.querySelector('RealTime')?.textContent),
+                        igtpb: convert(currentpbSplit.querySelector('GameTime')?.textContent),
                         rtapbSegments: rtapbSegment,
                         igtpbSegments: igtpbSegment,
-                        rtagold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent),
-                        igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent),
-                        rtaaverage: rtaTemp / rtaHistory.length,
-                        igtaverage: igtTemp / igtHistory.length,
+                        rtagold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime')?.textContent),
+                        igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime')?.textContent),
+                        rtaaverage: rtaAverage,
+                        igtaverage: igtAverage,
                     }
+
                 break;
                 case "truefalse" :
                     segments[i] = {
                         data: splits.querySelectorAll('Segment')[i], 
                         name: splits.querySelectorAll('Name')[i].textContent,
-                        rtapb: convert(currentpbSplit.querySelector('RealTime').textContent),
+                        rtapb: convert(currentpbSplit.querySelector('RealTime')?.textContent),
                         rtapbSegments: rtapbSegment,
-                        rtagold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime').textContent),
-                        rtaaverage: rtaTemp / rtaHistory.length,
+                        rtagold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime')?.textContent),
+                        rtaaverage: rtaAverage,
                     }
+
                 break;
                 case "falsetrue" :
                     segments[i] = {
                         data: splits.querySelectorAll('Segment')[i], 
                         name: splits.querySelectorAll('Name')[i].textContent,
-                        igtpb: convert(currentpbSplit.querySelector('GameTime').textContent),
+                        igtpb: convert(currentpbSplit.querySelector('GameTime')?.textContent),
                         igtpbSegments: igtpbSegment,
-                        igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime').textContent),
-                        igtaverage: igtTemp / igtHistory.length,
+                        igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime')?.textContent),
+                        igtaverage: igtAverage,
                     }
+
                 break;
             }
-            console.log(segments)
         }
     }
 
-    //Sets up the interface
+    //Sets up the interface 
     dropZoneClear()
 
     dropZone = document.querySelector(".drop-zone");
