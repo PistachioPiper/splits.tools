@@ -167,9 +167,10 @@ async function onDrop(ev) {
         console.log("Attemtps:" + attemptCount)
 
 
-    //check if RealTime/GameTime exist    
-    let rtaTiming = splits.querySelector('Segments').querySelector("RealTime") !== null;
-    let igtTiming = splits.querySelector('Segments').querySelector("GameTime") !== null;
+    //check if RealTime/GameTime exist  
+    
+    let rtaTiming = (splits.querySelector('Segments').querySelector("RealTime")?.textContent != null && splits.querySelector('Segments').querySelector("RealTime")?.textContent !== "00:00:00")
+    let igtTiming = (splits.querySelector('Segments').querySelector("GameTime")?.textContent != null && splits.querySelector('Segments').querySelector("GameTime")?.textContent !== "00:00:00")
     let timingMethod = [rtaTiming, igtTiming];
     console.log("Timing Methods: " + "RTA=" + timingMethod[0] + " IGT=" + timingMethod[1])
     if (!timingMethod[0] && !timingMethod[1]){
@@ -247,7 +248,6 @@ async function onDrop(ev) {
                         rtaaverage: rtaAverage,
                         igtaverage: igtAverage,
                     }
-
                 break;
                 case "truefalse" :
                     segments[i] = {
@@ -258,7 +258,6 @@ async function onDrop(ev) {
                         rtagold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime')?.textContent),
                         rtaaverage: rtaAverage,
                     }
-
                 break;
                 case "falsetrue" :
                     segments[i] = {
@@ -269,7 +268,6 @@ async function onDrop(ev) {
                         igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime')?.textContent),
                         igtaverage: igtAverage,
                     }
-
                 break;
             }
         }
