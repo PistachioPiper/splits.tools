@@ -10,8 +10,7 @@
 // async <-- goes on the function
 // await <-- can then be used
 //
-const TextDisplay = document.querySelector('p')
-console.log(TextDisplay.textContent)
+console.log(document.querySelector('p').textContent)
 
 //converts HH:MM:SS.MS to SEC.MS
 function convert(hmsInput) {
@@ -184,6 +183,7 @@ async function onDrop(ev) {
         let timing = "" + timingMethod[0] + timingMethod[1] 
         let SegmentHistory = splits.querySelectorAll('SegmentHistory')
 
+        //meow
         for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
             let rtaHistory = SegmentHistory[i].querySelectorAll('RealTime')
             let igtHistory = SegmentHistory[i].querySelectorAll('GameTime')
@@ -192,6 +192,7 @@ async function onDrop(ev) {
             let currentpbSplit = splits.querySelectorAll("SplitTime[name='Personal Best']")[i]
             let prevPbSplit = splits.querySelectorAll("SplitTime[name='Personal Best']")[i - 1]
             
+            //rta pb segments
             if (timingMethod[0]) {
                 let currentRealTime = currentpbSplit.querySelector('RealTime')?.textContent
                 let prevRealTime = prevPbSplit?.querySelector('RealTime')?.textContent
@@ -205,8 +206,9 @@ async function onDrop(ev) {
                         }
                     }
                 }
-
             }
+
+            //igt pb segments
             if (timingMethod[1]) {
                 let currentGameTime = currentpbSplit.querySelector('GameTime')?.textContent
                 let prevGameTime = prevPbSplit?.querySelector('GameTime')?.textContent
@@ -221,6 +223,8 @@ async function onDrop(ev) {
                     }
                 }
             }
+
+            //average segments
             let rtaTemp = 0
             let igtTemp = 0
             for(j = 0; j < rtaHistory.length; j++) {
@@ -234,6 +238,7 @@ async function onDrop(ev) {
             if (rtaHistory.length == 0) {rtaAverage = null;}
             if (igtHistory.length == 0) {igtAverage = null;}
 
+            //the funny ™
             switch (timing) {
                 case "truetrue" :
                     segments[i] = {
