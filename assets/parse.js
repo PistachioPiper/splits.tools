@@ -10,7 +10,6 @@
 // async <-- goes on the function
 // await <-- can then be used
 //
-console.log(document.querySelector('p').textContent)
 
 //converts HH:MM:SS.MS to SEC.MS
 function convert(hmsInput) {
@@ -167,7 +166,7 @@ async function onDrop(ev) {
 
 
     //check if RealTime/GameTime exist  
-    
+    //painful cringe check frick you js
     let rtaTiming = (splits.querySelector('Segments').querySelector("RealTime")?.textContent != null && splits.querySelector('Segments').querySelector("RealTime")?.textContent !== "00:00:00")
     let igtTiming = (splits.querySelector('Segments').querySelector("GameTime")?.textContent != null && splits.querySelector('Segments').querySelector("GameTime")?.textContent !== "00:00:00")
     let timingMethod = [rtaTiming, igtTiming];

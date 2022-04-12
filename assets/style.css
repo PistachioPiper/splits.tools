@@ -17,21 +17,32 @@ body {
     margin: 0;
 }
 
-p {
-    font-size: 14px;
+p, ol {
+    font-size: 16px;
     margin: 0;
     padding:8px;
+    height: auto;
 }
 
-h2 {
-    font-family: Moon;
+li {
+    margin: 18px;
+}
 
+
+h1, h2, h3 {
+    font-family: Moon;
+    margin: 70px;
+}
+
+h1 {
+    margin-top: 10vh;
 }
 
 td, th {
     padding:16px;
     text-align: right;
 }
+
 
 .split-names {
     text-align: left;
@@ -47,9 +58,11 @@ td, th {
     display: block;
     width: 1200px;
     height: 800px;
-    filter: blur(7px) brightness(20%);
+    filter: blur(10px) brightness(10%) saturate(70%);
     width: 100vw;
     height: 100vh;
+    /*source: https://twitter.com/blazpu_/status/1507031715071795201?s=20&t=jx6Be0pNP7k2_Qy57M4PuA*/
+    background-image: url(/assets/mona.jpg);
 }
 
 .interface-header {
@@ -81,6 +94,7 @@ tablewrapper {
 
 a {
     color: lightskyblue;
+    transition: color 0.4s;
 }
 
 a:visited {
@@ -100,42 +114,6 @@ a:hover {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#playerID {
-    aspect-ratio: 16/9;
-    width: 900px;
-}
-
-@media only screen and (max-width: 950px) {
-    #playerID {
-        width: 600px;
-    }
-}
-
-@media only screen and (max-width: 610px) {
-    #playerID {
-        width: 100%;
-    }
-}
-
-h1 {
-    padding-top: 50px;
-}
-
 .navbar {
     overflow: hidden;
     background-color: #202020;
@@ -147,27 +125,23 @@ h1 {
     font-family: Moon;
 }
 
+
 .navbar-right {
     float: right;
     padding-right: 16px;
 }
 
-.wrapper {
-    display: table;
-    margin: auto;
-    height: 100%;
-    text-align: center;
-
-}
 
 .navbar a {
     color: white;
 
 }
 
+
 .navbar a:hover {
     color: fuchsia;
 }
+
 
 .navbar a {
     float: left;
@@ -179,95 +153,6 @@ h1 {
     font-size: 17px;
 }
 
-#projects {
-    margin: 8px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.project {
-    margin: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    padding: 8px 8px 16px 8px;
-    max-width: 48%;
-    text-align: left;
-}
-
-.project-image {
-    width: 100%;
-}
-
-.project-video {
-    width: calc(100% - 16px);
-    height: auto;
-    padding:8px;
-    border: none;
-}
-
-.project-title {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.project-subtitle {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.project-description {
-    margin: 0;
-}
-
-.project-links {
-    margin: 8px;
-    padding: 8px 8px 16px 8px;
-    width: calc(100% - 16px);
-    text-align: left;
-    text-align: center;
-    float: left;
-    font-size: 17px;
-    font-family: Moon;
-}
-
-.project-links a {
-    width: 100%;
-    padding: 10px;
-    color: white;
-    text-decoration: none;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-}
-
-.project-links a:hover {
-    color: fuchsia;
-}
-
-
-@media only screen and (min-width: 2561px) {
-    .project {
-        max-width: calc(20% - 36px);
-    }
-}
-
-@media only screen and (max-width: 2560px) {
-    .project {
-        max-width: calc(25% - 36px);
-    }
-}
-
-@media only screen and (max-width: 1600px) {
-    .project {
-        max-width: calc(33% - 36px);
-    }
-}
-
-
-@media only screen and (max-width: 1200px) {
-    .project {
-        max-width: calc(50% - 36px);
-    }
-}
 
 @media only screen and (max-width:881px) {
     .navbar-right {
@@ -275,8 +160,3 @@ h1 {
     }
 }
 
-@media only screen and (max-width: 600px) {
-    .project {
-        max-width: 100%;
-    }
-}
