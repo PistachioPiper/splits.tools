@@ -31,7 +31,7 @@ li {
 
 h1, h2, h3 {
     font-family: Moon;
-    margin: 70px;
+    padding:8px;
 }
 
 h1 {
@@ -58,11 +58,11 @@ td, th {
     display: block;
     width: 1200px;
     height: 800px;
-    filter: blur(10px) brightness(10%) saturate(70%);
+    filter: blur(10px) brightness(18%) saturate(50%);
     width: 100vw;
     height: 100vh;
     /*source: https://twitter.com/blazpu_/status/1507031715071795201?s=20&t=jx6Be0pNP7k2_Qy57M4PuA*/
-    background-image: url(/assets/mona.jpg);
+    background-size: cover;
 }
 
 .interface-header {

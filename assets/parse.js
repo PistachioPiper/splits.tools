@@ -158,6 +158,7 @@ async function onDrop(ev) {
             .then((x) => {
                 let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
                 document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
+                document.body.querySelector('div.background-image').style.backgroundSize = 'auto'
             })
         
         //attemptCount
@@ -288,7 +289,13 @@ async function onDrop(ev) {
 
     tableSet(timingMethod, segments)
 }
+
+
 //defines dropZone
 let dropZone = document.querySelector(".drop-zone");
 dropZone.addEventListener("dragover", onDragOver);
 dropZone.addEventListener("drop", onDrop);
+
+
+//sets start image
+document.body.querySelector('div.background-image').style.backgroundImage = `url(/assets/images/${Math.floor(Math.random() * 6) + ".png"})`
