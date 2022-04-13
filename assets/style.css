@@ -105,6 +105,18 @@ a:hover {
     color: fuchsia;
 }
 
+@media only screen and (max-width:460px) {
+    h1 {
+        font-size: 24px;
+    }
+    h2 {
+        font-size: 18px;
+    }
+    p {
+        font-size: 14px;
+    }
+}
+
 
 
 
