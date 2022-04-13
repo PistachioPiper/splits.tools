@@ -298,4 +298,18 @@ dropZone.addEventListener("drop", onDrop);
 
 
 //sets start image
-document.body.querySelector('div.background-image').style.backgroundImage = `url(/assets/images/${Math.floor(Math.random() * 6) + ".png"})`
+
+
+    {let image = []
+    image[0] = {name: "blazpu", source: "https://twitter.com/blazpu_/status/1507031715071795201?s=20&t=V2xkSnzvHPKi7bX4d1AK0A", link: "https://cdn.discordapp.com/attachments/737796796255961241/963645722111127552/0.png" }
+    image[1] = {name: "亞門弐形", source: "https://www.pixiv.net/en/artworks/96533693", link: "https://cdn.discordapp.com/attachments/737796796255961241/963644580933279754/1.png" }
+    image[2] = {name: "Love, Chunibyo & Other Delusions (official)", source: "https://en.wikipedia.org/wiki/Love,_Chunibyo_%26_Other_Delusions", link: "https://cdn.discordapp.com/attachments/737796796255961241/963644581629558814/2.png" }
+    image[3] = {name: "マシュ様", source: "https://www.pixiv.net/en/artworks/96235594", link: "https://cdn.discordapp.com/attachments/737796796255961241/963644582074126396/3.png" }
+    image[4] = {name: "GUWEIZ", source: "https://www.pixiv.net/en/artworks/84976214", link: "https://cdn.discordapp.com/attachments/737796796255961241/963644582455828541/4.png" }
+    image[5] = {name: "Tteul_rie", source: "https://www.pixiv.net/en/artworks/96570128", link: "https://cdn.discordapp.com/attachments/737796796255961241/963644582942355486/5.png" }
+    let source = document.body.querySelector('a')
+    let randNum = Math.floor(Math.random() * 6)
+    document.body.querySelector('div.background-image').style.backgroundImage = `url(${image[randNum].link})`
+    source.textContent = image[randNum].name
+    source.setAttribute("href", image[randNum].source)
+}

@@ -35,7 +35,7 @@ h1, h2, h3 {
 }
 
 h1 {
-    margin-top: 10vh;
+    margin-top: 5vh;
 }
 
 td, th {
@@ -61,7 +61,6 @@ td, th {
     filter: blur(10px) brightness(18%) saturate(50%);
     width: 100vw;
     height: 100vh;
-    /*source: https://twitter.com/blazpu_/status/1507031715071795201?s=20&t=jx6Be0pNP7k2_Qy57M4PuA*/
     background-size: cover;
 }
 
