@@ -162,7 +162,7 @@ async function onDrop(ev) {
             })
         
         //attemptCount
-        let attemptCount = splits.querySelector('AttemptCount').textContent
+        let attemptCount = splits.querySelectorAll('Attempt').length
         console.log("Attemtps:" + attemptCount)
 
 
@@ -182,6 +182,9 @@ async function onDrop(ev) {
     {
         let timing = "" + timingMethod[0] + timingMethod[1] 
         let SegmentHistory = splits.querySelectorAll('SegmentHistory')
+        let prevPassCount
+        let rtaSumOfBest = 0
+        let igtSumOfBest = 0
 
         //meow
         for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
@@ -224,6 +227,18 @@ async function onDrop(ev) {
                 }
             }
 
+            //attempt, reset and pass counts
+            let passCount = SegmentHistory[i].querySelectorAll('Time')?.length
+            let resetCount
+            if (i === 0) {
+                resetCount = attemptCount - passCount
+            } else {
+                resetCount = attemptCount - passCount - prevPassCount
+            }
+            let segAttemptCount = passCount + resetCount
+            prevPassCount = passCount
+
+            
             //average segments
             let rtaTemp = 0
             let igtTemp = 0
@@ -252,6 +267,9 @@ async function onDrop(ev) {
                         igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime')?.textContent),
                         rtaaverage: rtaAverage,
                         igtaverage: igtAverage,
+                        passcount: passCount,
+                        resetcount: resetCount,
+                        attemptcount: segAttemptCount,
                     }
                 break;
                 case "truefalse" :
@@ -262,6 +280,9 @@ async function onDrop(ev) {
                         rtapbSegments: rtapbSegment,
                         rtagold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('RealTime')?.textContent),
                         rtaaverage: rtaAverage,
+                        passcount: passCount,
+                        resetcount: resetCount,
+                        attemptcount: segAttemptCount,
                     }
                 break;
                 case "falsetrue" :
@@ -272,11 +293,50 @@ async function onDrop(ev) {
                         igtpbSegments: igtpbSegment,
                         igtgold: convert(splits.querySelectorAll('BestSegmentTime')[i].querySelector('GameTime')?.textContent),
                         igtaverage: igtAverage,
+                        passcount: passCount,
+                        resetcount: resetCount,
+                        attemptcount: segAttemptCount,
                     }
                 break;
             }
         }
+        
+        //set up SoB
+        rtaSob = 0
+        igtSob = 0
+        for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+            if (timingMethod[0]) {rtaSob = rtaSob + segments[i].rtagold}
+            if (timingMethod[1]) {igtSob = igtSob + segments[i].igtgold}
+        }
+        
+
+        //metrics and magic number
+        let avlossScalar = 1;
+        let resetScalar = 1;
+        let lengthScalar = 1;
+
+        if (timingMethod[0]) {
+            for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+                segments[i].rtaavlossratio = segments[i].rtaaverage / segments[i].rtagold;
+                segments[i].rtaresetratio = segments[i].resetcount / segments[i].attemptcount;
+                segments[i].rtalengthratio = segments[i].rtagold / rtaSob;
+                segments[i].rtamagicnumber = (avlossScalar * segments[i].rtaavlossratio) + (resetScalar * segments[i].rtaresetratio) + (lengthScalar * segments[i].rtalengthratio) / 3 ;
+                console.log(segments[i].rtamagicnumber)
+            }
+        }
+
+        if (timingMethod[1]) {
+            for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+                segments[i].igtavlossratio = segments[i].igtaverage / segments[i].igtgold;
+                segments[i].igtresetratio = segments[i].resetcount / segments[i].attemptcount;
+                segments[i].igtlengthratio = segments[i].igtgold / rtaSob;
+                segments[i].igtmagicnumber = (avlossScalar * segments[i].igtavlossratio) + (resetScalar * segments[i].igtresetratio) + (lengthScalar * segments[i].igtlengthratio) / 3 ;
+                console.log(segments[i].igtmagicnumber)
+            }
+        }
     }
+
+
 
     //Sets up the interface 
     dropZoneClear()

@@ -106,13 +106,13 @@ a:hover {
 
 @media only screen and (max-width:460px) {
     h1 {
-        font-size: 24px;
+        font-size: 20px;
     }
     h2 {
-        font-size: 18px;
+        font-size: 16px;
     }
     p {
-        font-size: 14px;
+        font-size: 13px;
     }
 }
 
