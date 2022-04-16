@@ -311,27 +311,41 @@ async function onDrop(ev) {
         
 
         //metrics and magic number
+        //TODO add optional sliders at future date
         let avlossScalar = 1;
         let resetScalar = 1;
         let lengthScalar = 1;
 
+        rtaMagicTotal = 0
+        igtMagicTotal = 0
         if (timingMethod[0]) {
             for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
                 segments[i].rtaavlossratio = segments[i].rtaaverage / segments[i].rtagold;
                 segments[i].rtaresetratio = segments[i].resetcount / segments[i].attemptcount;
                 segments[i].rtalengthratio = segments[i].rtagold / rtaSob;
                 segments[i].rtamagicnumber = (avlossScalar * segments[i].rtaavlossratio) + (resetScalar * segments[i].rtaresetratio) + (lengthScalar * segments[i].rtalengthratio) / 3 ;
-                console.log(segments[i].rtamagicnumber)
+                rtaMagicTotal = rtaMagicTotal + segments[i].rtamagicnumber
             }
         }
-
         if (timingMethod[1]) {
             for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
                 segments[i].igtavlossratio = segments[i].igtaverage / segments[i].igtgold;
                 segments[i].igtresetratio = segments[i].resetcount / segments[i].attemptcount;
                 segments[i].igtlengthratio = segments[i].igtgold / rtaSob;
                 segments[i].igtmagicnumber = (avlossScalar * segments[i].igtavlossratio) + (resetScalar * segments[i].igtresetratio) + (lengthScalar * segments[i].igtlengthratio) / 3 ;
-                console.log(segments[i].igtmagicnumber)
+                igtMagicTotal = igtMagicTotal + segments[i].igtmagicnumber
+            }
+        }
+
+        //sets up magic ratio
+        if (timingMethod[0]) {
+            for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+                segments[i].rtamagicratio = segments[i].rtamagicnumber / rtaMagicTotal;
+            }
+        }
+        if (timingMethod[1]) {
+            for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+                segments[i].igtmagicratio = segments[i].igtmagicnumber / igtMagicTotal;
             }
         }
     }
