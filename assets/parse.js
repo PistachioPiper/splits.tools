@@ -98,6 +98,15 @@ function tableSet(timingMethod, segments) {
     }
 }
 
+//TODO creates the statistics output
+function statsSet() {
+
+}
+
+
+//TODO shows the custom comparison 
+//TODO vs original?
+
 //checks if the input file is an lss
 let fileName
 let fileExtension
@@ -362,6 +371,10 @@ async function onDrop(ev) {
     dropZone.appendChild(headerTag);
 
     tableSet(timingMethod, segments)
+
+    statsSet()
+
+    comparisonSet()
 }
 
 
