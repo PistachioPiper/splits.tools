@@ -38,11 +38,20 @@ h1 {
     margin-top: 5vh;
 }
 
+h3 {
+    margin: 0px;
+    padding-top: 0px;
+    padding-bottom: 32px;
+}
+
 td, th {
     padding:16px;
     text-align: right;
 }
 
+.hidden {
+    display: none;
+}
 
 .split-names {
     text-align: left;
@@ -75,7 +84,7 @@ tablewrapper {
     text-align: center;
     display: table;
     margin: auto;
-    padding: 32px 0px;
+    padding: 20px 0px;
 }
 
 .drop-zone {
@@ -110,6 +119,9 @@ a:hover {
     }
     h2 {
         font-size: 16px;
+    }
+    h3 {
+        font-size: 14;
     }
     p {
         font-size: 13px;

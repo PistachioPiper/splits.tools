@@ -15,7 +15,10 @@
 function convert(hmsInput) {
     if (hmsInput == null) {return null}
     let hmsArray = hmsInput.split(":", 3)
-    let secOutput = (parseInt(hmsArray[0]) * 3600) + (parseInt(hmsArray[1]) * 60) + parseFloat(hmsArray[2])
+    let secOutput
+    if (hmsArray.length === 3) {secOutput = (parseInt(hmsArray[0]) * 3600) + (parseInt(hmsArray[1]) * 60) + parseFloat(hmsArray[2])}
+    if (hmsArray.length === 2) {secOutput = (parseInt(hmsArray[0]) * 60) + parseFloat(hmsArray[1])}
+    if (hmsArray.length === 1) {secOutput = parseFloat(hmsArray[0])}
     return secOutput;
 }
 
@@ -61,6 +64,17 @@ function ptagSet(ptagText) {
     dropZone.appendChild(pTag);
 }
 
+function tableToggle() {
+    let tableList = document.querySelectorAll('table')
+    for (i = 0; i < tableList.length; i++)
+        class_list = tableList[i].classList
+        if (class_list.contains("hidden")) {
+            class_list.remove("hidden")
+        } else {
+            class_list.add("hidden")
+        }
+}
+
 
 //creates the output table
 function tableSet(timingMethod, segments) {
@@ -81,7 +95,7 @@ function tableSet(timingMethod, segments) {
     if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-average">Average Segment IGT</td>`}
     if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-gold">IGT Gold</td>`}
     dataTable.appendChild(headerRow)
-    for (let i = 0; i < segments.length; i++) {
+    for (let i = 0; i < splitCount; i++) {
         let tableRow = document.createElement("tr");
         tableRow.innerHTML += `<td class="split-names">${segments[i].name}</td>`
         if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pb">${unconvert2DP(segments[i].rtapb)}</td>`}
@@ -98,14 +112,13 @@ function tableSet(timingMethod, segments) {
     }
 }
 
+
 //TODO creates the statistics output
 function statsSet() {
 
 }
 
 
-//TODO shows the custom comparison 
-//TODO vs original?
 
 //checks if the input file is an lss
 let fileName
@@ -144,6 +157,102 @@ async function onDrop(ev) {
     dropZone.innerHTML = "";
 
 
+    //scoped function yay
+    //calculates custom comparison
+    let rtaGoal
+    let igtGoal
+    function compConstruct() {
+        let rtaCompDiff
+        let igtCompDiff
+        if (timingMethod[0]) {
+            rtaGoal = prompt("Enter a goal time for the comparison (RTA) in the form HH:MM:SS.MS\rIf you would like to skip this comparison option, press Cancel", `${unconvert2DP(segments[splitCount - 1].rtapb)}`)
+            rtaCompDiff = convert(rtaGoal) - rtaSob
+            if (rtaCompDiff > 0) {
+                for (i = 0; i < splitCount; i++) {
+                    segments[i].rtacustomsegment = segments[i].rtamagicratio * rtaCompDiff + segments[i].rtagold
+                    if (i === 0) {segments[i].rtacustomsplit = segments[i].rtacustomsegment;}
+                    else {segments[i].rtacustomsplit = segments[i].rtacustomsegment + segments[i - 1].rtacustomsplit}
+                }
+            } else rtaCompDiff = null
+        }
+        if (timingMethod[1]) {
+            igtGoal = prompt("Enter a goal time for the comparison (IGT) in the form HH:MM:SS.MS\rIf you would like to skip this comparison option, press Cancel", `${unconvert2DP(segments[splitCount - 1].igtpb)}`)
+            igtCompDiff = convert(igtGoal) - igtSob
+            if (igtCompDiff > 0) {
+                for (i = 0; i < splitCount; i++) {
+                    segments[i].igtcustomsegment = segments[i].igtmagicratio * igtCompDiff + segments[i].igtgold
+                    if (i === 0) {segments[i].igtcustomsplit = segments[i].igtcustomsegment}
+                    else {segments[i].igtcustomsplit = segments[i].igtcustomsegment + segments[i - 1].igtcustomsplit}
+                }
+            } else igtCompDiff = null
+        }
+        
+        //TODO show the custom comparison in a new table
+
+        //creates the add comparison button if comparison exists
+        // TODO make these buttons show in the same line
+        if (rtaCompDiff || igtCompDiff){
+            document.querySelector('.comparison-tag').innerText = "New Comparison";
+
+            if (!document.querySelector('.add-tag')) {
+                let addTag = document.createElement("h3")
+                addTag.innerText = "Add comparison to splits";
+                addTag.classList.add("add-tag")
+                addTag.addEventListener("click", compAdd)
+                dropZone.appendChild(addTag);
+
+                downloadTag = document.createElement("h3")
+                downloadTag.innerText = "Download splits";
+                downloadTag.classList.add("download-tag")
+                downloadTag.classList.add("hidden")
+                downloadTag.addEventListener("click", compDownload)
+                dropZone.appendChild(downloadTag);
+            } else {
+                document.querySelector('.add-tag').classList.remove('hidden')
+            }
+        }
+    }
+
+    function compAdd() {
+        //adds comparison to splits and creates download button if necessary
+        //TODO fix blipblo coop interaction :|
+            for (i = 0; i < splitCount; i++) {
+                let compSegment = splits.createElement('SplitTime')
+                if (igtGoal) {
+                    let gameTime = splits.createElement('GameTime')
+                    gameTime.textContent = unconvert(segments[i].igtcustomsplit)
+                    compSegment.appendChild(gameTime)
+
+                    compSegment.setAttribute('name', igtGoal)
+                } else {compSegment.setAttribute('name', rtaGoal)}
+
+                if (rtaGoal) {
+                    let realTime = splits.createElement('RealTime')
+                    realTime.textContent = unconvert(segments[i].rtacustomsplit)
+                    compSegment.appendChild(realTime)
+                }
+
+                splits.querySelectorAll('SplitTimes')[i].appendChild(compSegment)
+            }
+            console.log(splits)
+
+
+
+        document.querySelector('.add-tag').classList.add('hidden')
+        document.querySelector('.download-tag').classList.remove('hidden')
+    }
+
+    function compDownload() {
+        // TODO prepare and download the splits file
+        let downloader = document.createElement('a');
+        downloader.classList.add('hidden')
+        downloader.setAttribute('href', splits)
+        downloader.setAttribute('download', fileName)
+        dropZone.appendChild(downloader)
+        /*downloader.click()
+        downloader.remove()*/
+    }
+
 
     //sets up xml file
     let files = ev.dataTransfer.files;
@@ -151,7 +260,9 @@ async function onDrop(ev) {
     let fileText = await file.text();
     let parser = new DOMParser();
     let splits = parser.parseFromString(fileText, 'application/xml');
+    splitCount = splits.querySelectorAll('Segment').length;
     console.log(splits)
+    console.log("Split Count: " + splitCount)
 
 
         //game+category
@@ -196,7 +307,7 @@ async function onDrop(ev) {
         let igtSumOfBest = 0
 
         //meow
-        for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+        for (i = 0; i < splitCount; i++) {
             let rtaHistory = SegmentHistory[i].querySelectorAll('RealTime')
             let igtHistory = SegmentHistory[i].querySelectorAll('GameTime')
             let rtapbSegment
@@ -313,7 +424,7 @@ async function onDrop(ev) {
         //set up SoB
         rtaSob = 0
         igtSob = 0
-        for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+        for (i = 0; i < splitCount; i++) {
             if (timingMethod[0]) {rtaSob = rtaSob + segments[i].rtagold}
             if (timingMethod[1]) {igtSob = igtSob + segments[i].igtgold}
         }
@@ -328,7 +439,7 @@ async function onDrop(ev) {
         rtaMagicTotal = 0
         igtMagicTotal = 0
         if (timingMethod[0]) {
-            for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+            for (i = 0; i < splitCount; i++) {
                 segments[i].rtaavlossratio = segments[i].rtaaverage / segments[i].rtagold;
                 segments[i].rtaresetratio = segments[i].resetcount / segments[i].attemptcount;
                 segments[i].rtalengthratio = segments[i].rtagold / rtaSob;
@@ -337,7 +448,7 @@ async function onDrop(ev) {
             }
         }
         if (timingMethod[1]) {
-            for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+            for (i = 0; i < splitCount; i++) {
                 segments[i].igtavlossratio = segments[i].igtaverage / segments[i].igtgold;
                 segments[i].igtresetratio = segments[i].resetcount / segments[i].attemptcount;
                 segments[i].igtlengthratio = segments[i].igtgold / rtaSob;
@@ -348,16 +459,17 @@ async function onDrop(ev) {
 
         //sets up magic ratio
         if (timingMethod[0]) {
-            for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+            for (i = 0; i < splitCount; i++) {
                 segments[i].rtamagicratio = segments[i].rtamagicnumber / rtaMagicTotal;
             }
         }
         if (timingMethod[1]) {
-            for (i = 0; i < splits.querySelectorAll('Segment').length; i++) {
+            for (i = 0; i < splitCount; i++) {
                 segments[i].igtmagicratio = segments[i].igtmagicnumber / igtMagicTotal;
             }
         }
     }
+
 
 
 
@@ -368,13 +480,18 @@ async function onDrop(ev) {
     let headerTag = document.createElement("h2");
     headerTag.innerText = gameName + ": " + categoryName
     headerTag.classList.add("interface-header");
+    headerTag.addEventListener("click", tableToggle)
     dropZone.appendChild(headerTag);
 
     tableSet(timingMethod, segments)
 
-    statsSet()
+    let comparisonTag = document.createElement("h3")
+    comparisonTag.innerText = "Click here to create a custom comparison";
+    comparisonTag.classList.add("comparison-tag")
+    comparisonTag.addEventListener("click", compConstruct)
+    dropZone.appendChild(comparisonTag);
 
-    comparisonSet()
+    statsSet()
 }
 
 
@@ -387,15 +504,16 @@ dropZone.addEventListener("drop", onDrop);
 //sets start image
     {
     let image = [
-    {name: "blazpu", source: "https://twitter.com/blazpu_/status/1507031715071795201?s=20&t=V2xkSnzvHPKi7bX4d1AK0A", link: "/assets/images/0.png" },
+    {name: "blazpu", source: "https://twitter.com/blazpu_/status/1507031715071795201?s=20&t=V2xkSnzvHPKi7bX4d1AK0A"},
     {name: "亞門弐形", source: "https://www.pixiv.net/en/artworks/96533693", link: "/assets/images/1.png" },
-    {name: "Love, Chunibyo & Other Delusions (official)", source: "https://en.wikipedia.org/wiki/Love,_Chunibyo_%26_Other_Delusions", link: "/assets/images/2.png" },
-    {name: "マシュ様", source: "https://www.pixiv.net/en/artworks/96235594", link: "/assets/images/3.png" },
-    {name: "GUWEIZ", source: "https://www.pixiv.net/en/artworks/84976214", link: "/assets/images/4.png" },
-    {name: "Tteul_rie", source: "https://www.pixiv.net/en/artworks/96570128", link: "/assets/images/5.png" },]
+    {name: "Love, Chunibyo & Other Delusions (official)", source: "https://en.wikipedia.org/wiki/Love,_Chunibyo_%26_Other_Delusions"},
+    {name: "マシュ様", source: "https://www.pixiv.net/en/artworks/96235594"},
+    {name: "GUWEIZ", source: "https://www.pixiv.net/en/artworks/84976214"},
+    {name: "Tteul_rie", source: "https://www.pixiv.net/en/artworks/96570128"},
+    ]
     let source = document.body.querySelector('a')
-    let randNum = Math.floor(Math.random() * 6)
-    document.body.querySelector('div.background-image').style.backgroundImage = `url(${image[randNum].link})`
+    let randNum = Math.floor(Math.random() * image.length)
+    document.body.querySelector('div.background-image').style.backgroundImage = `url(/assets/images/${randNum}.png)`
     source.textContent = image[randNum].name
     source.setAttribute("href", image[randNum].source)
 }
