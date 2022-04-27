@@ -243,14 +243,18 @@ async function onDrop(ev) {
     }
 
     function compDownload() {
-        // TODO prepare and download the splits file
         let downloader = document.createElement('a');
         downloader.classList.add('hidden')
-        downloader.setAttribute('href', splits)
         downloader.setAttribute('download', fileName)
+
+        let xmlString = new XMLSerializer().serializeToString(splits);
+        let blob = new Blob([xmlString], { type: 'text/xml' });
+        let url = URL.createObjectURL(blob, { oneTimeOnly: true });
+        downloader.setAttribute('href', url)
+
         dropZone.appendChild(downloader)
-        /*downloader.click()
-        downloader.remove()*/
+        downloader.click()
+        downloader.remove()
     }
 
 
