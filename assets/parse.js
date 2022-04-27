@@ -516,6 +516,7 @@ async function onDrop(ev) {
 
         //metrics and magic number
         //TODO add optional sliders at future date
+        //TODO balance this bs
         let avlossScalar = 1;
         let resetScalar = 1;
         let lengthScalar = 1;
