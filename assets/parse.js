@@ -64,15 +64,17 @@ function ptagSet(ptagText) {
     dropZone.appendChild(pTag);
 }
 
+//toggles the table lol
 function tableToggle() {
     let tableList = document.querySelectorAll('table')
-    for (i = 0; i < tableList.length; i++)
-        class_list = tableList[i].classList
-        if (class_list.contains("hidden")) {
-            class_list.remove("hidden")
+    for (i = 0; i < tableList.length; i++) {
+        let tableClassList = tableList[i].classList;
+        if (tableClassList.contains("hidden")) {
+            tableClassList.remove("hidden")
         } else {
-            class_list.add("hidden")
+            tableClassList.add("hidden")
         }
+    }
 }
 
 
@@ -85,30 +87,78 @@ function tableSet(timingMethod, segments) {
     let dataTable = document.querySelector("table")
     let headerRow = document.createElement("tr")
     headerRow.innerHTML += `<td class="split-names">Segment Names</td>`
-    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-pb">RTA Split in PB</td>`}
-    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-pbseg">RTA Segment in PB</td>`}
-    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-average">Average Segment RTA</td>`}
-    if (timingMethod[0]) {headerRow.innerHTML += `<td class="rta-gold">RTA Gold</td>`}
+    if (timingMethod[0]) {
+        headerRow.innerHTML += `<td class="rta-pb">RTA Split in PB</td>`
+        headerRow.innerHTML += `<td class="rta-pbseg">RTA Segment in PB</td>`
+        headerRow.innerHTML += `<td class="rta-average">Average Segment RTA</td>`
+        headerRow.innerHTML += `<td class="rta-gold">RTA Gold</td>`
+    }
 
-    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-pb">IGT Split in PB</td>`}
-    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-pbseg">IGT Segment in PB</td>`}
-    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-average">Average Segment IGT</td>`}
-    if (timingMethod[1]) {headerRow.innerHTML += `<td class="igt-gold">IGT Gold</td>`}
+    if (timingMethod[1]) {
+        headerRow.innerHTML += `<td class="igt-pb">IGT Split in PB</td>`
+        headerRow.innerHTML += `<td class="igt-pbseg">IGT Segment in PB</td>`
+        headerRow.innerHTML += `<td class="igt-average">Average Segment IGT</td>`
+        headerRow.innerHTML += `<td class="igt-gold">IGT Gold</td>`
+    }
     dataTable.appendChild(headerRow)
     for (let i = 0; i < splitCount; i++) {
         let tableRow = document.createElement("tr");
         tableRow.innerHTML += `<td class="split-names">${segments[i].name}</td>`
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pb">${unconvert2DP(segments[i].rtapb)}</td>`}
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-pbseg">${unconvert2DP(segments[i].rtapbSegments)}</td>`}
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-average">${unconvert2DP(segments[i].rtaaverage)}`}
-        if (timingMethod[0]) {tableRow.innerHTML += `<td class="rta-gold">${unconvert2DP(segments[i].rtagold)}</td>`}
+        if (timingMethod[0]) {
+            tableRow.innerHTML += `<td class="rta-pb">${unconvert2DP(segments[i].rtapb)}</td>`
+            tableRow.innerHTML += `<td class="rta-pbseg">${unconvert2DP(segments[i].rtapbSegments)}</td>`
+            tableRow.innerHTML += `<td class="rta-average">${unconvert2DP(segments[i].rtaaverage)}`
+            tableRow.innerHTML += `<td class="rta-gold">${unconvert2DP(segments[i].rtagold)}</td>`
+        }
 
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pb">${unconvert2DP(segments[i].igtpb)}</td>`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-pbseg">${unconvert2DP(segments[i].igtpbSegments)}</td>`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-average">${unconvert2DP(segments[i].igtaverage)}`}
-        if (timingMethod[1]) {tableRow.innerHTML += `<td class="igt-gold">${unconvert2DP(segments[i].igtgold)}</td>`}
+        if (timingMethod[1]) {
+            tableRow.innerHTML += `<td class="igt-pb">${unconvert2DP(segments[i].igtpb)}</td>`
+            tableRow.innerHTML += `<td class="igt-pbseg">${unconvert2DP(segments[i].igtpbSegments)}</td>`
+            tableRow.innerHTML += `<td class="igt-average">${unconvert2DP(segments[i].igtaverage)}`
+            tableRow.innerHTML += `<td class="igt-gold">${unconvert2DP(segments[i].igtgold)}</td>`
+        }
         tableRow.classList.add("data-table");
         dataTable.appendChild(tableRow);
+    }
+
+    //creates the hidden table for comparisons
+    let customTable = document.createElement("table")
+    customTable.classList.add('hidden')
+    customTable.classList.add('custom-table')
+    wrapper.appendChild(customTable)
+    let customHeaderRow = document.createElement("tr")
+    customHeaderRow.classList.add('customHeaderRow')
+    customHeaderRow.innerHTML += `<td class="split-names">Segment Names</td>`
+    if (timingMethod[0]) {
+        customHeaderRow.innerHTML += `<td class="rta-pb">RTA Split in PB</td>`
+        customHeaderRow.innerHTML += `<td class="rta-sob">RTA Golds</td>`
+
+    }
+    
+    if (timingMethod[1]) {
+        customHeaderRow.innerHTML += `<td class="igt-pb">IGT Split in PB</td>`
+        customHeaderRow.innerHTML += `<td class="igt-sob">IGT Golds</td>`
+
+    }
+    customTable.appendChild(customHeaderRow)
+
+
+    for (let i = 0; i < splitCount; i++) {
+        let tableRow = document.createElement("tr");
+        tableRow.classList.add('custom-data-table')
+        tableRow.innerHTML += `<td class="split-names">${segments[i].name}</td>`
+        if (timingMethod[0]) {
+            tableRow.innerHTML += `<td class="rta-pb">${unconvert2DP(segments[i].rtapb)}</td>`
+            tableRow.innerHTML += `<td class="rta-sob">${unconvert2DP(segments[i].rtasobsplit)}</td>`
+
+        }
+
+        if (timingMethod[1]) {
+            tableRow.innerHTML += `<td class="igt-pb">${unconvert2DP(segments[i].igtpb)}</td>`
+            tableRow.innerHTML += `<td class="igt-sob">${unconvert2DP(segments[i].igtsobsplit)}</td>`
+        }
+        tableRow.classList.add("custom-data-table");
+        customTable.appendChild(tableRow);
     }
 }
 
@@ -215,29 +265,49 @@ async function onDrop(ev) {
 
     function compAdd() {
         //adds comparison to splits and creates download button if necessary
-        //TODO fix blipblo coop interaction :|
-            for (i = 0; i < splitCount; i++) {
-                let compSegment = splits.createElement('SplitTime')
-                if (igtGoal) {
-                    let gameTime = splits.createElement('GameTime')
-                    gameTime.textContent = unconvert(segments[i].igtcustomsplit)
-                    compSegment.appendChild(gameTime)
+        for (i = 0; i < splitCount; i++) {
+            let compSegment = splits.createElement('SplitTime')
+            if (igtGoal) {
+                let gameTime = splits.createElement('GameTime')
+                gameTime.textContent = unconvert(segments[i].igtcustomsplit)
+                compSegment.appendChild(gameTime)
 
-                    compSegment.setAttribute('name', igtGoal)
-                } else {compSegment.setAttribute('name', rtaGoal)}
+                compSegment.setAttribute('name', igtGoal)
+            } else {compSegment.setAttribute('name', rtaGoal)}
 
-                if (rtaGoal) {
-                    let realTime = splits.createElement('RealTime')
-                    realTime.textContent = unconvert(segments[i].rtacustomsplit)
-                    compSegment.appendChild(realTime)
-                }
-
-                splits.querySelectorAll('SplitTimes')[i].appendChild(compSegment)
+            if (rtaGoal) {
+                let realTime = splits.createElement('RealTime')
+                realTime.textContent = unconvert(segments[i].rtacustomsplit)
+                compSegment.appendChild(realTime)
             }
-            console.log(splits)
 
+            splits.querySelectorAll('SplitTimes')[i].appendChild(compSegment)
+        }
+        console.log(splits)
 
+        let customTable = document.querySelector('.custom-table')
+        let customHeaderRow = document.querySelector('.customHeaderRow')
+            
+        if (rtaGoal) {
+            customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal}</td>`
+            for (i = 0; i < splitCount; i++) {
+            let currentSeg = document.querySelectorAll('.custom-data-table')[i]
+            currentSeg.innerHTML += `<td class="comparison-splits">${unconvert2DP(segments[i].rtacustomsplit)}</td>`
+            }
+        }
 
+        if (igtGoal) {
+            customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal}</td>`
+            for (i = 0; i < splitCount; i++) {
+                let currentSeg = document.querySelectorAll('.custom-data-table')[i]
+                currentSeg.innerHTML += `<td class="comparison-splits">${unconvert2DP(segments[i].igtcustomsplit)}</td>`
+                }
+        }
+
+        //makes the table visible
+        if (customTable.classList.contains('hidden')) {tableToggle()}
+
+        
         document.querySelector('.add-tag').classList.add('hidden')
         document.querySelector('.download-tag').classList.remove('hidden')
     }
@@ -428,11 +498,21 @@ async function onDrop(ev) {
         //set up SoB
         rtaSob = 0
         igtSob = 0
+
         for (i = 0; i < splitCount; i++) {
-            if (timingMethod[0]) {rtaSob = rtaSob + segments[i].rtagold}
-            if (timingMethod[1]) {igtSob = igtSob + segments[i].igtgold}
+            if (timingMethod[0]) {
+                rtaSob = rtaSob + segments[i].rtagold
+                segments[i].rtasobsplit = rtaSob
+            }
         }
-        
+
+        for (i = 0; i < splitCount; i++) {
+            if (timingMethod[1]) {
+                igtSob = igtSob + segments[i].igtgold
+                segments[i].igtsobsplit = igtSob
+            }
+        }
+
 
         //metrics and magic number
         //TODO add optional sliders at future date
