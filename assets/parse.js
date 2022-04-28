@@ -215,11 +215,12 @@ async function onDrop(ev) {
     let rtaGoal
     let igtGoal
     function compConstruct() {
-        let rtaCompDiff
-        let igtCompDiff
+        let rtaCompDiff = 0
+        let igtCompDiff = 0
         if (timingMethod[0]) {
             rtaGoal = prompt("Enter a goal time for the comparison (RTA) in the form HH:MM:SS.MS\rIf you would like to skip this comparison option, press Cancel", `${unconvert2DP(segments[splitCount - 1].rtapb)}`)
             rtaCompDiff = convert(rtaGoal) - rtaSob
+            
             if (rtaCompDiff > 0) {
                 for (i = 0; i < splitCount; i++) {
                     segments[i].rtacustomsegment = segments[i].rtamagicratio * rtaCompDiff + segments[i].rtagold
@@ -237,8 +238,7 @@ async function onDrop(ev) {
                     if (i === 0) {segments[i].igtcustomsplit = segments[i].igtcustomsegment}
                     else {segments[i].igtcustomsplit = segments[i].igtcustomsegment + segments[i - 1].igtcustomsplit}
                 }
-            } else igtCompDiff = null
-        }
+            } else igtCompDiff = null}
         
 
         //creates the add comparison button if comparison exists
