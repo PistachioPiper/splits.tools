@@ -45,6 +45,9 @@ h3 {
 }
 
 .tag-wrapper {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
