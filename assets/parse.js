@@ -209,6 +209,9 @@ async function onDrop(ev) {
 
     //scoped function yay
     //calculates custom comparison
+    let comparisonTag
+    let addTag
+    let downloadTag
     let rtaGoal
     let igtGoal
     function compConstruct() {
@@ -237,28 +240,35 @@ async function onDrop(ev) {
             } else igtCompDiff = null
         }
         
-        //TODO show the custom comparison in a new table
 
         //creates the add comparison button if comparison exists
-        // TODO make these buttons show in the same line
         if (rtaCompDiff || igtCompDiff){
-            document.querySelector('.comparison-tag').innerText = "New Comparison";
-
+            comparisonTag.innerText = "New Comparison";
             if (!document.querySelector('.add-tag')) {
-                let addTag = document.createElement("h3")
+                addTag = document.createElement("h3")
                 addTag.innerText = "Add comparison to splits";
                 addTag.classList.add("add-tag")
                 addTag.addEventListener("click", compAdd)
-                dropZone.appendChild(addTag);
+                tagWrapper.appendChild(addTag);
 
                 downloadTag = document.createElement("h3")
                 downloadTag.innerText = "Download splits";
                 downloadTag.classList.add("download-tag")
                 downloadTag.classList.add("hidden")
                 downloadTag.addEventListener("click", compDownload)
-                dropZone.appendChild(downloadTag);
+                tagWrapper.appendChild(downloadTag);
+                comparisonTag.style.width = '50%';
+                addTag.style.width = '50%'
+                downloadTag.style.width = '50%'
             } else {
+                addTag = document.querySelector(".add-tag")
+                downloadTag = document.querySelector(".download-tag")
+                addTag = document.createElement("h3")
                 document.querySelector('.add-tag').classList.remove('hidden')
+                comparisonTag.style.width = '33%';
+                addTag.style.width = '33%';
+                downloadTag.style.width = '33%';
+
             }
         }
     }
@@ -284,6 +294,9 @@ async function onDrop(ev) {
             splits.querySelectorAll('SplitTimes')[i].appendChild(compSegment)
         }
         console.log(splits)
+
+        comparisonTag.style.width = '50%'
+        downloadTag.style.width = '50%'
 
         let customTable = document.querySelector('.custom-table')
         let customHeaderRow = document.querySelector('.customHeaderRow')
@@ -570,11 +583,14 @@ async function onDrop(ev) {
 
     tableSet(timingMethod, segments)
 
-    let comparisonTag = document.createElement("h3")
+    let tagWrapper = document.createElement('div')
+    tagWrapper.classList.add('tag-wrapper')
+    dropZone.appendChild(tagWrapper)
+    comparisonTag = document.createElement("h3")
     comparisonTag.innerText = "Click here to create a custom comparison";
     comparisonTag.classList.add("comparison-tag")
     comparisonTag.addEventListener("click", compConstruct)
-    dropZone.appendChild(comparisonTag);
+    tagWrapper.appendChild(comparisonTag);
 
     statsSet()
 }

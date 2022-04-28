@@ -44,6 +44,32 @@ h3 {
     padding-bottom: 32px;
 }
 
+.tag-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.comparison-tag {
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+.add-tag {
+    width: 50%;
+    padding: 0px;
+    margin: 0px;
+} 
+
+.download-tag {
+    width: 50%;
+    float: right;
+    padding: 0px;
+    margin: 0px;
+}
+
+
 td, th {
     padding:16px;
     text-align: right;
