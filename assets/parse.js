@@ -220,7 +220,7 @@ async function onDrop(ev) {
         if (timingMethod[0]) {
             rtaGoal = prompt("Enter a goal time for the comparison (RTA) in the form HH:MM:SS.MS\rIf you would like to skip this comparison option, press Cancel", `${unconvert2DP(segments[splitCount - 1].rtapb)}`)
             rtaCompDiff = convert(rtaGoal) - rtaSob
-            
+
             if (rtaCompDiff > 0) {
                 for (i = 0; i < splitCount; i++) {
                     segments[i].rtacustomsegment = segments[i].rtamagicratio * rtaCompDiff + segments[i].rtagold
@@ -605,12 +605,21 @@ dropZone.addEventListener("drop", onDrop);
 //sets start image
     {
     let image = [
-    {name: "blazpu", source: "https://twitter.com/blazpu_/status/1507031715071795201?s=20&t=V2xkSnzvHPKi7bX4d1AK0A"},
-    {name: "亞門弐形", source: "https://www.pixiv.net/en/artworks/96533693", link: "/assets/images/1.png" },
+    {name: "blazpu", source: "https://twitter.com/blazpu_/status/1507031715071795201"},
+    {name: "亞門弐形", source: "https://www.pixiv.net/en/artworks/96533693"},
     {name: "Love, Chunibyo & Other Delusions (official)", source: "https://en.wikipedia.org/wiki/Love,_Chunibyo_%26_Other_Delusions"},
     {name: "マシュ様", source: "https://www.pixiv.net/en/artworks/96235594"},
     {name: "GUWEIZ", source: "https://www.pixiv.net/en/artworks/84976214"},
     {name: "Tteul_rie", source: "https://www.pixiv.net/en/artworks/96570128"},
+    {name: "月の朧", source: "https://www.pixiv.net/en/artworks/97801699"},
+    {name: "ハラダミユキ", source: "https://twitter.com/HaradaMiyuki_/status/1517812660628520961"},
+    {name: "ハラダミユキ", source: "https://twitter.com/HaradaMiyuki_/status/1517812660628520961"},
+    {name: "あるあ", source: "https://twitter.com/imo_to_tk/status/1505922227350687744"},
+    {name: "ファジョボレ", source: "https://www.pixiv.net/en/artworks/97904275"},
+    {name: "サナセオキレ", source: "https://www.pixiv.net/en/artworks/27005086"},
+    {name: "ぽけ太郎", source: "https://twitter.com/hamutyurosu/status/1518593419035426821"},
+    {name: "K3nzoTeruya", source: "https://www.pixiv.net/en/artworks/97394501"},
+    {name: "银樱", source: "https://www.pixiv.net/en/artworks/97871129"},
     ]
     let source = document.body.querySelector('a')
     let randNum = Math.floor(Math.random() * image.length)
