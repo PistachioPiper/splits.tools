@@ -43,11 +43,6 @@ function unconvert2DP(secInput) {
     return hmsOutput
 }
 
-//im lazy so this makes times 2dp smiley face
-function timeFix(time) {
-    return unconvert2DP(convert(time));
-}
-
 //clears the dropZone
 function dropZoneClear() {
     let dropZone = document.querySelector(".drop-zone");
