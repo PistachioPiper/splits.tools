@@ -209,9 +209,17 @@ async function onDrop(ev) {
     let downloadTag
     let rtaGoal
     let igtGoal
+    let rtaCompDiff
+    let igtCompDiff
+
+
     function compConstruct() {
-        let rtaCompDiff = 0
-        let igtCompDiff = 0
+        if (document.querySelector("input").checked) {simpCompConstruct()} else {compCompConstruct()}
+    }
+
+    function compCompConstruct() {
+        rtaCompDiff = 0
+        igtCompDiff = 0
         if (timingMethod[0]) {
             rtaGoal = prompt("Enter a goal time for the comparison (RTA) in the form HH:MM:SS.MS\rIf you would like to skip this comparison option, press Cancel", `${unconvert2DP(segments[splitCount - 1].rtapb)}`)
             rtaCompDiff = convert(rtaGoal) - rtaSob
@@ -233,10 +241,21 @@ async function onDrop(ev) {
                     if (i === 0) {segments[i].igtcustomsplit = segments[i].igtcustomsegment}
                     else {segments[i].igtcustomsplit = segments[i].igtcustomsegment + segments[i - 1].igtcustomsplit}
                 }
-            } else igtCompDiff = null}
-        
+            } else igtCompDiff = null
+        }
+        compButton()
+    }
+
+
+    function simpCompConstruct() {
+        rtaCompDiff = 0
+        igtCompDiff = 0
+
+    }
+
 
         //creates the add comparison button if comparison exists
+    function compButton() {
         if (rtaCompDiff || igtCompDiff){
             comparisonTag.innerText = "New Comparison";
             if (!document.querySelector('.add-tag')) {
@@ -263,7 +282,6 @@ async function onDrop(ev) {
                 comparisonTag.style.width = '33%';
                 addTag.style.width = '33%';
                 downloadTag.style.width = '33%';
-
             }
         }
     }
@@ -577,6 +595,13 @@ async function onDrop(ev) {
     dropZone.appendChild(headerTag);
 
     tableSet(timingMethod, segments)
+
+    let boxTag = document.createElement('p')
+    boxTag.innerText = "Use simple calculations for comparison"
+    let simpBox = document.createElement('input')
+    simpBox.setAttribute('type', "checkbox")
+    boxTag.appendChild(simpBox)
+    dropZone.appendChild(boxTag)
 
     let tagWrapper = document.createElement('div')
     tagWrapper.classList.add('tag-wrapper')
