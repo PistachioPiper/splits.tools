@@ -212,7 +212,6 @@ async function onDrop(ev) {
     let rtaCompDiff
     let igtCompDiff
 
-
     function compConstruct() {
         if (document.querySelector("input").checked) {simpCompConstruct()} else {compCompConstruct()}
     }
@@ -250,7 +249,30 @@ async function onDrop(ev) {
     function simpCompConstruct() {
         rtaCompDiff = 0
         igtCompDiff = 0
+        if (timingMethod[0]) {
+            rtaGoal = prompt("Enter a goal time for the comparison (RTA) in the form HH:MM:SS.MS\rIf you would like to skip this comparison option, press Cancel", `${unconvert2DP(segments[splitCount - 1].rtapb)}`)
+            rtaCompDiff = convert(rtaGoal) - rtaSob
 
+            if (rtaCompDiff > 0) {
+                for (i = 0; i < splitCount; i++) {
+                    segments[i].rtacustomsegment = segments[i].rtalengthratio * rtaCompDiff + segments[i].rtagold
+                    if (i === 0) {segments[i].rtacustomsplit = segments[i].rtacustomsegment;}
+                    else {segments[i].rtacustomsplit = segments[i].rtacustomsegment + segments[i - 1].rtacustomsplit}
+                }
+            } else rtaCompDiff = null
+        }
+        if (timingMethod[1]) {
+            igtGoal = prompt("Enter a goal time for the comparison (IGT) in the form HH:MM:SS.MS\rIf you would like to skip this comparison option, press Cancel", `${unconvert2DP(segments[splitCount - 1].igtpb)}`)
+            igtCompDiff = convert(igtGoal) - igtSob
+            if (igtCompDiff > 0) {
+                for (i = 0; i < splitCount; i++) {
+                    segments[i].igtcustomsegment = segments[i].igtlengthratio * igtCompDiff + segments[i].igtgold
+                    if (i === 0) {segments[i].igtcustomsplit = segments[i].igtcustomsegment}
+                    else {segments[i].igtcustomsplit = segments[i].igtcustomsegment + segments[i - 1].igtcustomsplit}
+                }
+            } else igtCompDiff = null
+        }
+        compButton()
     }
 
 
@@ -304,6 +326,9 @@ async function onDrop(ev) {
                 compSegment.appendChild(realTime)
             }
 
+            if (document.querySelector("input").checked) {
+                compSegment.setAttribute('name', compSegment.getAttribute('name') + " (simple)")
+            }
             splits.querySelectorAll('SplitTimes')[i].appendChild(compSegment)
         }
         console.log(splits)
@@ -311,11 +336,14 @@ async function onDrop(ev) {
         comparisonTag.style.width = '50%'
         downloadTag.style.width = '50%'
 
+        //creates the comparison table
         let customTable = document.querySelector('.custom-table')
         let customHeaderRow = document.querySelector('.customHeaderRow')
             
         if (rtaGoal) {
-            customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal}</td>`
+            if (document.querySelector("input").checked) {
+                customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal + " (simple)"}</td>`
+            } else {customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal}</td>`}
             for (i = 0; i < splitCount; i++) {
             let currentSeg = document.querySelectorAll('.custom-data-table')[i]
             currentSeg.innerHTML += `<td class="comparison-splits">${unconvert2DP(segments[i].rtacustomsplit)}</td>`
@@ -323,7 +351,9 @@ async function onDrop(ev) {
         }
 
         if (igtGoal) {
-            customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal}</td>`
+            if (document.querySelector("input").checked) {
+                customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal + " (simple)"}</td>`
+            } else {customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal}</td>`}
             for (i = 0; i < splitCount; i++) {
                 let currentSeg = document.querySelectorAll('.custom-data-table')[i]
                 currentSeg.innerHTML += `<td class="comparison-splits">${unconvert2DP(segments[i].igtcustomsplit)}</td>`
@@ -542,7 +572,6 @@ async function onDrop(ev) {
 
         //metrics and magic number
         //TODO add optional sliders at future date
-        //TODO balance this bs
         let avlossScalar = 1;
         let resetScalar = 1;
         let lengthScalar = 1;

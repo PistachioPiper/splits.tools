@@ -1,37 +1,33 @@
-# YASA-Yet Another Splits Analyzer
-This is my shot at a splits analyzer/custom comparison generator that I'm making for my APCSP (Advanced Placement Computer Scienece Principles) project/exam.
+# Piper's Splits Analyzer
+Welcome to my splits analyzer program! This is my first real project in CS (went into this with zero proper coding experience, much less JavaScript experience) and it started out as part of my APCSP final project.
 
-## Inspiration:
-  - [Splitmaker](https://minibeast.me/splitmaker/) by Minibeast
-  - [timeloss.run](https://timeloss.run) by Corvimae
+## What does it do?
+Currently, this website will:
+- Greet you with a welcome page that contains basic instructions
+- Meet you with a random weeb splits background image (credited to the artist)
+- Prompt you to drag and drop a LiveSplit splits file (.lss)
+- Analyze and display data from the file
+- Allow you to generate a custom comparison of a set length
+  - Choose from two calculation options (default and simple)
 
-## Goals
-  ### Splits Analysis
-  - Achieve the same goal as [timeloss.run](https://timeloss.run)
-  - Add additional functionality as I'd like
-  
-  ### Custom Comparison Generation 
-  Generate custom comparisons based on your splits as many others have done, factoring in the following:
-  - Gold times
-  - Average deviation from gold times
-  - Relative split reset rate
+## What is the comparison calculation doing?
+The comparison calculation is slightly complicated, but simply put:
+- Using details parsed from the splits to "weigh" the timesave to allocate for each split
+  - Average timeloss to gold
+  - Reset frequency
+  - Length of split
+- Distributing timesave to each split based on a ratio of the difference between the supplied goal time and Sum Of Best
+## Future goals for the project
+This isn't done being developed, and I'd like to add more features over time to make this a sort of "hub" for some nifty splits tools.
+I would like to:
+- Add statistical analysis of the splits, similar to that of [timeloss.run](https://timeloss.run) by Corvimae
+- Add more customizability and accessibility to the tools present
 
-## Requirements
-  - [X] Instructions for input from at least one of the following:
-    - The user (including user actions that trigger events)
-    - A device
-    - An online data stream
-    - A file
+## Who inspired me?
+- This was inspired primarily by [Splitmaker](https://minibeast.me/splitmaker/) by Minibeast
+- Additionally, [timeloss.run](https://timeloss.run) by Corvimae
+- Simple splits formula was inspired by [Source28's](https://twitter.com/Source28_) splits generator
 
-  - [X] Use of at least one <b>list</b> (or other <b>collection type</b>) to represent a collection of data that is stored and used to manage program complexity and help fulfil the program's purpose
-
-  - [X] At least one procedure that contributes to the program's intended purpose, where you have defined:
-    - The procedure's name
-    - The return type (if necessary)
-    - One or more parameters
-
-  - [X] An algorithm that includes sequencing, selection, and iteration that is in the body of the selected procedure
-
-  - [X] Calls to your student-developed procedure
-
-  - [X] Instructions for output (tactile, audible, visual, or textual) based on input and program functionality
+## I have an idea/question! How can I contact you?
+- Message me on Discord at Piper#1109
+- Message me on Twitter [here](https://twitter.com/piperdumpy)
