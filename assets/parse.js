@@ -598,11 +598,11 @@ dropZone.addEventListener("drop", onDrop);
 
 
 //sets start
-if (Math.floor(Math.random() * 1000 !== 420)) {
+if (Math.floor(Math.random() * 1000) !== 420) {
     let image = [
         {name: "blazpu", source: "https://twitter.com/blazpu_/status/1507031715071795201"},
         {name: "亞門弐形", source: "https://www.pixiv.net/en/artworks/96533693"},
-        {name: "Love, Chunibyo & Other Delusions (official)", source: "https://en.wikipedia.org/wiki/Love,_Chunibyo_%26_Other_Delusions"},
+        {name: "Love, Chunibyo & Other Delusions (official artwork)", source: "https://en.wikipedia.org/wiki/Love,_Chunibyo_%26_Other_Delusions"},
         {name: "マシュ様", source: "https://www.pixiv.net/en/artworks/96235594"},
         {name: "GUWEIZ", source: "https://www.pixiv.net/en/artworks/84976214"},
         {name: "Tteul_rie", source: "https://www.pixiv.net/en/artworks/96570128"},
