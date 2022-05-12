@@ -550,7 +550,7 @@ async function onDrop(ev) {
                 break;
             }
         }
-        
+        //
         //set up SoB
         rtaSob = 0
         igtSob = 0
