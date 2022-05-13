@@ -44,6 +44,17 @@ h3 {
     padding-top: 0px;
 }
 
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+    text-align: left;
+    z-index: 3;
+    padding: 10px;
+}
+
 .tag-wrapper {
     max-width: 1200px;
     margin-left: auto;
@@ -120,7 +131,7 @@ tablewrapper {
     position: fixed;
     left: 0;
     right: 0;
-    z-index: 9999;
+    z-index: 2;
     margin-left: 0px;
     margin-right: 0px;
     width: 100vw;

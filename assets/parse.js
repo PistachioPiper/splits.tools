@@ -157,6 +157,13 @@ function tableSet(timingMethod, segments) {
     }
 }
 
+function footerToggle() {
+    let footer = document.querySelector('.footer')
+    if (footer.classList.contains('hidden')) {
+        footer.classList.remove('hidden')
+    } else {footer.classList.add('hidden')}
+}
+
 
 //TODO creates the statistics output
 function statsSet() {
@@ -211,6 +218,9 @@ async function onDrop(ev) {
     let igtGoal
     let rtaCompDiff
     let igtCompDiff
+    let avlossScalar
+    let resetScalar
+    let lengthScalar
 
     function compConstruct() {
         if (document.querySelector("input").checked) {simpCompConstruct()} else {compCompConstruct()}
@@ -394,26 +404,28 @@ async function onDrop(ev) {
     console.log(splits)
     console.log("Split Count: " + splitCount)
 
+    footerToggle()
 
-        //game+category
-        let gameName = splits.querySelector('GameName').textContent
-        let categoryName = splits.querySelector('CategoryName').textContent
-        let gameCategory = gameName + " " + categoryName
-        console.log("Category: " + gameCategory)
 
-        //sets background image (async)
-        let urlComponent = encodeURIComponent(gameName)
-        fetch(`https://www.speedrun.com/api/v1/games?name=${urlComponent}`)
-            .then((resp) => resp.json())
-            .then((x) => {
-                let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
-                document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
-                document.body.querySelector('div.background-image').style.backgroundSize = 'auto'
-            })
-        
-        //attemptCount
-        let attemptCount = splits.querySelectorAll('Attempt').length
-        console.log("Attemtps:" + attemptCount)
+    //game+category
+    let gameName = splits.querySelector('GameName').textContent
+    let categoryName = splits.querySelector('CategoryName').textContent
+    let gameCategory = gameName + " " + categoryName
+    console.log("Category: " + gameCategory)
+
+    //sets background image (async)
+    let urlComponent = encodeURIComponent(gameName)
+    fetch(`https://www.speedrun.com/api/v1/games?name=${urlComponent}`)
+        .then((resp) => resp.json())
+        .then((x) => {
+            let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
+            document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
+            document.body.querySelector('div.background-image').style.backgroundSize = 'auto'
+        })
+    
+    //attemptCount
+    let attemptCount = splits.querySelectorAll('Attempt').length
+    console.log("Attemtps:" + attemptCount)
 
 
     //check if RealTime/GameTime exist  
@@ -550,7 +562,7 @@ async function onDrop(ev) {
                 break;
             }
         }
-        //
+        
         //set up SoB
         rtaSob = 0
         igtSob = 0
@@ -571,10 +583,10 @@ async function onDrop(ev) {
 
 
         //metrics and magic number
-        //TODO add optional sliders at future date
-        let avlossScalar = 1;
-        let resetScalar = 1;
-        let lengthScalar = 1;
+        //TODO add optional sliders at future date (have sliders appear with comparison buttons, update these variables)
+        avlossScalar = 1;
+        resetScalar = 1;
+        lengthScalar = 1;
 
         rtaMagicTotal = 0
         igtMagicTotal = 0
