@@ -157,6 +157,13 @@ function tableSet(timingMethod, segments) {
     }
 }
 
+function footerToggle() {
+    let footer = document.querySelector('.footer')
+    if (footer.classList.contains('hidden')) {
+        footer.classList.remove('hidden')
+    } else {footer.classList.add('hidden')}
+}
+
 
 //TODO creates the statistics output
 function statsSet() {
@@ -186,6 +193,59 @@ function filecheck(ev) {
     return 1;
 }
 
+//handles checkboxes
+function simpTick() {
+    if (document.querySelector(".simpBox").checked) {
+        document.querySelector(".custBox").setAttribute('disabled',"")
+    } else {
+        document.querySelector(".custBox").removeAttribute('disabled')
+    } 
+}
+
+function custTick() {
+    for (i=0; i < document.querySelectorAll(".custom-input").length; i++) {
+        if (document.querySelector(".custBox").checked) {
+            document.querySelector(".simpBox").setAttribute('disabled',"")
+            document.querySelectorAll(".custom-input")[i].classList.remove("hidden")
+        } else {
+            document.querySelector(".simpBox").removeAttribute('disabled')
+            document.querySelectorAll(".custom-input")[i].classList.add("hidden")
+        }
+    }
+}
+
+function numberUpdate(index) {
+    switch (index) {
+        case 1:
+            document.getElementById("avloss-number").value = document.getElementById("avloss-slider").value
+        break;
+
+        case 2:
+            document.getElementById("reset-number").value = document.getElementById("reset-slider").value
+        break;
+        
+        case 3:
+            document.getElementById("length-number").value = document.getElementById("length-slider").value
+        break;
+    }
+}
+
+function sliderUpdate(index) {
+    switch (index) {
+        case 1:
+            document.getElementById("avloss-slider").value = document.getElementById("avloss-number").value
+        break;
+
+        case 2:
+            document.getElementById("reset-slider").value = document.getElementById("reset-number").value
+        break;
+        
+        case 3:
+            document.getElementById("length-slider").value = document.getElementById("length-number").value
+        break;
+    }
+}
+
 //overriding default DragOver behavior
 function onDragOver(ev) {
     ev.preventDefault();
@@ -211,12 +271,54 @@ async function onDrop(ev) {
     let igtGoal
     let rtaCompDiff
     let igtCompDiff
+    let avlossScalar
+    let resetScalar
+    let lengthScalar
+
 
     function compConstruct() {
-        if (document.querySelector("input").checked) {simpCompConstruct()} else {compCompConstruct()}
+        if (document.querySelector(".simpBox").checked) {simpCompConstruct()} else {compCompConstruct()}
     }
 
     function compCompConstruct() {
+        //doing custom comp construct shit
+        if (document.querySelector('.custBox').checked) {
+            avlossScalar = document.getElementById('avloss-slider').value
+            resetScalar = document.getElementById('reset-slider').value
+            lengthScalar = document.getElementById('length-slider').value
+            rtaMagicTotal = 0
+            igtMagicTotal = 0
+            if (timingMethod[0]) {
+                for (i = 0; i < splitCount; i++) {
+                    segments[i].rtaavlossratio = segments[i].rtaaverage / segments[i].rtagold;
+                    segments[i].rtaresetratio = segments[i].resetcount / segments[i].attemptcount;
+                    segments[i].rtalengthratio = segments[i].rtagold / rtaSob;
+                    segments[i].rtamagicnumber = (avlossScalar * segments[i].rtaavlossratio) + (resetScalar * segments[i].rtaresetratio) + (lengthScalar * segments[i].rtalengthratio) / 3 ;
+                    rtaMagicTotal = rtaMagicTotal + segments[i].rtamagicnumber
+                }
+            }
+            if (timingMethod[1]) {
+                for (i = 0; i < splitCount; i++) {
+                    segments[i].igtavlossratio = segments[i].igtaverage / segments[i].igtgold;
+                    segments[i].igtresetratio = segments[i].resetcount / segments[i].attemptcount;
+                    segments[i].igtlengthratio = segments[i].igtgold / rtaSob;
+                    segments[i].igtmagicnumber = (avlossScalar * segments[i].igtavlossratio) + (resetScalar * segments[i].igtresetratio) + (lengthScalar * segments[i].igtlengthratio) / 3 ;
+                    igtMagicTotal = igtMagicTotal + segments[i].igtmagicnumber
+                }
+            }
+
+            if (timingMethod[0]) {
+                for (i = 0; i < splitCount; i++) {
+                    segments[i].rtamagicratio = segments[i].rtamagicnumber / rtaMagicTotal;
+                }
+            }
+            if (timingMethod[1]) {
+                for (i = 0; i < splitCount; i++) {
+                    segments[i].igtmagicratio = segments[i].igtmagicnumber / igtMagicTotal;
+                }
+            }
+        }
+
         rtaCompDiff = 0
         igtCompDiff = 0
         if (timingMethod[0]) {
@@ -276,8 +378,10 @@ async function onDrop(ev) {
     }
 
 
-        //creates the add comparison button if comparison exists
+    //creates the add comparison button if comparison exists
     function compButton() {
+        if (document.querySelector('.custBox').checked) {document.querySelector('.custBox').click()}
+
         if (rtaCompDiff || igtCompDiff){
             comparisonTag.innerText = "New Comparison";
             if (!document.querySelector('.add-tag')) {
@@ -326,7 +430,7 @@ async function onDrop(ev) {
                 compSegment.appendChild(realTime)
             }
 
-            if (document.querySelector("input").checked) {
+            if (document.querySelector(".simpBox").checked) {
                 compSegment.setAttribute('name', compSegment.getAttribute('name') + " (simple)")
             }
             splits.querySelectorAll('SplitTimes')[i].appendChild(compSegment)
@@ -341,7 +445,7 @@ async function onDrop(ev) {
         let customHeaderRow = document.querySelector('.customHeaderRow')
             
         if (rtaGoal) {
-            if (document.querySelector("input").checked) {
+            if (document.querySelector(".simpBox").checked) {
                 customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal + " (simple)"}</td>`
             } else {customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal}</td>`}
             for (i = 0; i < splitCount; i++) {
@@ -351,7 +455,7 @@ async function onDrop(ev) {
         }
 
         if (igtGoal) {
-            if (document.querySelector("input").checked) {
+            if (document.querySelector(".simpBox").checked) {
                 customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal + " (simple)"}</td>`
             } else {customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal}</td>`}
             for (i = 0; i < splitCount; i++) {
@@ -394,26 +498,28 @@ async function onDrop(ev) {
     console.log(splits)
     console.log("Split Count: " + splitCount)
 
+    if (!document.querySelector('.footer').classList.contains('hidden')) {footerToggle()}
 
-        //game+category
-        let gameName = splits.querySelector('GameName').textContent
-        let categoryName = splits.querySelector('CategoryName').textContent
-        let gameCategory = gameName + " " + categoryName
-        console.log("Category: " + gameCategory)
 
-        //sets background image (async)
-        let urlComponent = encodeURIComponent(gameName)
-        fetch(`https://www.speedrun.com/api/v1/games?name=${urlComponent}`)
-            .then((resp) => resp.json())
-            .then((x) => {
-                let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
-                document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
-                document.body.querySelector('div.background-image').style.backgroundSize = 'auto'
-            })
-        
-        //attemptCount
-        let attemptCount = splits.querySelectorAll('Attempt').length
-        console.log("Attemtps:" + attemptCount)
+    //game+category
+    let gameName = splits.querySelector('GameName').textContent
+    let categoryName = splits.querySelector('CategoryName').textContent
+    let gameCategory = gameName + " " + categoryName
+    console.log("Category: " + gameCategory)
+
+    //sets background image (async)
+    let urlComponent = encodeURIComponent(gameName)
+    fetch(`https://www.speedrun.com/api/v1/games?name=${urlComponent}`)
+        .then((resp) => resp.json())
+        .then((x) => {
+            let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
+            document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
+            document.body.querySelector('div.background-image').style.backgroundSize = 'auto'
+        })
+    
+    //attemptCount
+    let attemptCount = splits.querySelectorAll('Attempt').length
+    console.log("Attemtps:" + attemptCount)
 
 
     //check if RealTime/GameTime exist  
@@ -550,7 +656,7 @@ async function onDrop(ev) {
                 break;
             }
         }
-        //
+        
         //set up SoB
         rtaSob = 0
         igtSob = 0
@@ -571,10 +677,10 @@ async function onDrop(ev) {
 
 
         //metrics and magic number
-        //TODO add optional sliders at future date
-        let avlossScalar = 1;
-        let resetScalar = 1;
-        let lengthScalar = 1;
+        //TODO add optional sliders at future date (have sliders appear with comparison buttons, update these variables)
+        avlossScalar = 1;
+        resetScalar = 1;
+        lengthScalar = 1;
 
         rtaMagicTotal = 0
         igtMagicTotal = 0
@@ -625,12 +731,28 @@ async function onDrop(ev) {
 
     tableSet(timingMethod, segments)
 
-    let boxTag = document.createElement('p')
-    boxTag.innerText = "Use simple calculations for comparison"
-    let simpBox = document.createElement('input')
-    simpBox.setAttribute('type', "checkbox")
-    boxTag.appendChild(simpBox)
-    dropZone.appendChild(boxTag)
+    let inputDiv = document.createElement('div')
+    inputDiv.classList.add('inputDiv')
+    inputDiv.innerHTML = `
+    <label>Use simple calculations for comparison <input name="simpBox" class="simpBox" onclick="simpTick()" type="checkbox"></label> 
+    <label>Use custom weighting (advanced) <input name="custBox"class="custBox" onclick="custTick()" type="checkbox"></label>
+    <br>
+    <label class="custom-input hidden" >Weight values for: Average Timeloss/Reset Count/Split Length </label>
+    <div class="custom-input hidden">
+        <label class="slider-input"> <input id="avloss-slider" type="range" onmousemove="numberUpdate(1)" onchange="sliderUpdate(1)" max="2" min="0" value="1" step="0.01"> </label>
+        <label class="number-input"> <input id="avloss-number"type="number" onchange="sliderUpdate(1)" max="2" min="0" value="1" step="0.01"> </label>
+    </div>
+    <div class="custom-input hidden">
+        <label class="slider-input"> <input id="reset-slider" type="range" onmousemove="numberUpdate(2)" onchange="sliderUpdate(2)" max="2" min="0" value="1" step="0.01"> </label>
+        <label class="number-input"> <input id="reset-number"type="number" onchange="sliderUpdate(2)" max="2" min="0" value="1" step="0.01"> </label>
+    </div>
+    <div class="custom-input hidden">
+        <label class="slider-input"> <input id="length-slider" type="range" onmousemove="numberUpdate(3)" onchange="sliderUpdate(2)" max="2" min="0" value="1" step="0.01"> </label>
+        <label class="number-input"> <input id="length-number"type="number" onchange="sliderUpdate(3)" max="2" min="0" value="1" step="0.01"> </label>
+    </div>
+    `
+    
+    dropZone.appendChild(inputDiv)
 
     let tagWrapper = document.createElement('div')
     tagWrapper.classList.add('tag-wrapper')
