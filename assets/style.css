@@ -24,6 +24,13 @@ p, ol {
     height: auto;
 }
 
+label {
+    font-size: 16px;
+    margin: 0;
+    padding:8px;
+    height: auto;
+}
+
 li {
     margin: 18px;
 }
@@ -56,14 +63,14 @@ h3 {
 }
 
 .tag-wrapper {
-    max-width: 1200px;
-    margin-left: auto;
+    max-width: 100%;
     margin-right: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    margin-bottom: 32px;
+    margin: 16px;
 }
+
 
 .comparison-tag {
     width: 100%;
