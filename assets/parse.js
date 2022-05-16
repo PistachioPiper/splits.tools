@@ -274,10 +274,21 @@ async function onDrop(ev) {
     let avlossScalar
     let resetScalar
     let lengthScalar
+    let comparisonMethod
+    let compCount = 0
 
 
     function compConstruct() {
+        if (document.querySelector(".simpBox").checked) {
+            comparisonMethod = "simple"
+        } else if (document.querySelector(".custBox").checked) {
+            comparisonMethod = "custom"
+        } else {
+            comparisonMethod = "normal"
+        }
+        
         if (document.querySelector(".simpBox").checked) {simpCompConstruct()} else {compCompConstruct()}
+        
     }
 
     function compCompConstruct() {
@@ -413,6 +424,12 @@ async function onDrop(ev) {
     }
 
     function compAdd() {
+        //counts comparisons added
+        compCount = compCount + 1
+
+        //logs comparison method
+        compGenLog(comparisonMethod)
+
         //adds comparison to splits and creates download button if necessary
         for (i = 0; i < splitCount; i++) {
             let compSegment = splits.createElement('SplitTime')
@@ -431,7 +448,12 @@ async function onDrop(ev) {
             }
 
             if (document.querySelector(".simpBox").checked) {
-                compSegment.setAttribute('name', compSegment.getAttribute('name') + " (simple)")
+                compSegment.setAttribute('name', compSegment.getAttribute('name') + "(simple)")
+            } else if (avlossScalar != 1 || resetScalar != 1 || lengthScalar != 1) {
+                console.log("gay")
+                compSegment.setAttribute('name', compSegment.getAttribute('name') + "(custom)" + `(${avlossScalar}, ${resetScalar}, ${lengthScalar})`)
+            } else {
+                compSegment.setAttribute('name', compSegment.getAttribute('name') + "(custom)")
             }
             splits.querySelectorAll('SplitTimes')[i].appendChild(compSegment)
         }
@@ -447,7 +469,11 @@ async function onDrop(ev) {
         if (rtaGoal) {
             if (document.querySelector(".simpBox").checked) {
                 customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal + " (simple)"}</td>`
-            } else {customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal}</td>`}
+            } else if (avlossScalar != 1 || resetScalar != 1 || lengthScalar != 1) {
+                customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal} (custom) (${avlossScalar}, ${resetScalar}, ${lengthScalar})</td>`
+            }else {
+                customHeaderRow.innerHTML += `<td class="comparison-header">${rtaGoal} (custom)</td>`
+            }
             for (i = 0; i < splitCount; i++) {
             let currentSeg = document.querySelectorAll('.custom-data-table')[i]
             currentSeg.innerHTML += `<td class="comparison-splits">${unconvert2DP(segments[i].rtacustomsplit)}</td>`
@@ -457,7 +483,11 @@ async function onDrop(ev) {
         if (igtGoal) {
             if (document.querySelector(".simpBox").checked) {
                 customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal + " (simple)"}</td>`
-            } else {customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal}</td>`}
+            } else if (avlossScalar != 1 || resetScalar != 1 || lengthScalar != 1) {
+                customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal} (custom) (${avlossScalar}, ${resetScalar}, ${lengthScalar})</td>`
+            }else {
+                customHeaderRow.innerHTML += `<td class="comparison-header">${igtGoal} (custom)</td>`
+            }
             for (i = 0; i < splitCount; i++) {
                 let currentSeg = document.querySelectorAll('.custom-data-table')[i]
                 currentSeg.innerHTML += `<td class="comparison-splits">${unconvert2DP(segments[i].igtcustomsplit)}</td>`
@@ -470,9 +500,20 @@ async function onDrop(ev) {
         
         document.querySelector('.add-tag').classList.add('hidden')
         document.querySelector('.download-tag').classList.remove('hidden')
+
+        document.getElementById('avloss-slider').value = 1
+        document.getElementById('reset-slider').value = 1
+        document.getElementById('length-slider').value = 1
+        document.getElementById('avloss-number').value = 1
+        document.getElementById('reset-number').value = 1
+        document.getElementById('length-number').value = 1
+        avlossScalar = 1
+        resetScalar = 1
+        lengthScalar = 1
     }
 
     function compDownload() {
+        downloadLog(compCount)
         let downloader = document.createElement('a');
         downloader.classList.add('hidden')
         downloader.setAttribute('download', fileName)
@@ -532,6 +573,9 @@ async function onDrop(ev) {
         ptagSet("You managed to not have real time *or* game time in your splits. congrats?");
         return;
     }
+
+    //logs splits info
+    splitsLog(gameName, categoryName, splitCount, timingMethod)
 
     //sets up segments
     let segments = []
