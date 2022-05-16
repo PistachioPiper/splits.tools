@@ -31,3 +31,14 @@ I would like to:
 ## I have an idea/question! How can I contact you?
 - Message me on Discord at Piper#1109
 - Message me on Twitter [here](https://twitter.com/piperdumpy)
+
+## Special thanks:
+- WamWooWam and Minibeast for assistance in learning JS, couldn't have done it without them
+
+- Various friends for supplying splits files to debug with
+  - Mini
+  - BlipBlo
+  - Source
+  - Wam
+  - Shayy
+  - Tyron
