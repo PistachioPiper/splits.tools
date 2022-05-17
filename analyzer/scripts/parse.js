@@ -843,7 +843,7 @@ if (Math.floor(Math.random() * 1000) !== 420) {
     ]
     let source = document.body.querySelector('a')
     let randNum = Math.floor(Math.random() * image.length)
-    document.body.querySelector('div.background-image').style.backgroundImage = `url(/assets/images/${randNum}.png)`
+    document.body.querySelector('div.background-image').style.backgroundImage = `url(/.assets/images/${randNum}.png)`
     source.textContent = image[randNum].name
     source.setAttribute("href", image[randNum].source)
 } else {ptagSet('i put my whole placeholdussy into this')}

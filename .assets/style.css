@@ -1,11 +1,11 @@
 @font-face {
     font-family: Mario;
-    src: url(/assets/funnyfont/NewRodin.ttf);
+    src: url(/.assets/funnyfont/NewRodin.ttf);
 }
 
 @font-face {
     font-family: Moon;
-    src: url(/assets/funnyfont/MoonGet.ttf);
+    src: url(/.assets/funnyfont/MoonGet.ttf);
 }
 
 body {
