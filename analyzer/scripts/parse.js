@@ -535,7 +535,6 @@ async function onDrop(ev) {
     let fileText = await file.text();
     let parser = new DOMParser();
     let splits = parser.parseFromString(fileText, 'application/xml');
-    let varString = "N/A"
     splitCount = splits.querySelectorAll('Segment').length;
     console.log(splits)
     console.log("Split Count: " + splitCount)
@@ -549,7 +548,7 @@ async function onDrop(ev) {
     let gameCategory = gameName + " " + categoryName
     let varCount = splits.querySelectorAll('Variable').length
     if (splits.querySelector('Variable')) {
-        varString = "("
+        let varString = "("
         for (i = 0; i < varCount - 1; i++) {
             varString += splits.querySelectorAll('Variable')[i].textContent;
             varString += ", "
@@ -588,7 +587,7 @@ async function onDrop(ev) {
     }
 
     //logs splits info
-    splitsLog(gameName, categoryName, varString, splitCount, timingMethod)
+    splitsLog(gameName, categoryName, splitCount, timingMethod)
 
     //sets up segments
     let segments = []
