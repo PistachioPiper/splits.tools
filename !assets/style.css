@@ -1,0 +1,193 @@
+@font-face {
+    font-family: Mario;
+    src: url(/!assets/funnyfont/NewRodin.ttf);
+}
+
+@font-face {
+    font-family: Moon;
+    src: url(/!assets/funnyfont/MoonGet.ttf);
+}
+
+body {
+    background-color: #000;
+    color: #E0E0E0;
+    height: 100%;
+    text-align: center;
+    font-family: Mario;
+    margin: 0;
+}
+
+p, ol {
+    font-size: 16px;
+    margin: 0;
+    padding:8px;
+    height: auto;
+}
+
+label {
+    font-size: 16px;
+    margin: 0;
+    padding:8px;
+    height: auto;
+}
+
+li {
+    margin: 18px;
+}
+
+
+h1, h2, h3 {
+    font-family: Moon;
+    padding:8px;
+}
+
+
+h1 {
+    margin-top: 5vh;
+}
+
+h2 {
+    line-height: 150%;
+}
+
+h3 {
+    margin: 0px;
+    padding-top: 0px;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+    text-align: left;
+    z-index: 3;
+    padding: 10px;
+}
+
+.tag-wrapper {
+    max-width: 100%;
+    margin-right: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 16px;
+}
+
+
+.comparison-tag {
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+.add-tag {
+    width: 50%;
+    padding: 0px;
+    margin: 0px;
+} 
+
+.download-tag {
+    width: 50%;
+    float: right;
+    padding: 0px;
+    margin: 0px;
+}
+
+
+td, th {
+    padding:16px;
+    text-align: right;
+}
+
+.hidden {
+    display: none;
+}
+
+.split-names {
+    text-align: left;
+    overflow-wrap: break-word;
+    max-width: 300px;
+}
+
+.background-image {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    display: block;
+    width: 1200px;
+    height: 800px;
+    filter: blur(10px) brightness(18%) saturate(50%);
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+}
+
+.interface-header {
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 48px;
+}
+
+tablewrapper {
+    text-align: center;
+    display: table;
+    margin: 20px auto;
+}
+
+.drop-zone {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+    font-family: Mario;
+}
+
+.working {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+    font-family: Mario;
+}
+
+a {
+    color: lightskyblue;
+    transition: color 0.4s;
+}
+
+a:visited {
+    color: lightskyblue;
+}
+
+a:hover {
+    color: fuchsia;
+}
+
+@media only screen and (max-width:460px) {
+    h1 {
+        font-size: 20px;
+    }
+    h2 {
+        font-size: 16px;
+    }
+    h3 {
+        font-size: 14;
+    }
+    p {
+        font-size: 13px;
+    }
+}
