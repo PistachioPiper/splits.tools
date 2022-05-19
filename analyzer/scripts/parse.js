@@ -824,6 +824,8 @@ async function onDrop(ev) {
 }
 
 
+
+
 //defines dropZone
 let dropZone = document.querySelector(".drop-zone");
 dropZone.addEventListener("dragover", onDragOver);
