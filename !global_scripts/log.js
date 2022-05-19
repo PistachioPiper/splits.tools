@@ -1,13 +1,14 @@
 //encodeURIComponent()
 
 //game, category, split count, timing methods
-function splitsLog(game, category, splitCount, timing) {
+function splitsLog(game, category, variables, splitCount, timing) {
+    console.log(variables)
     if (timing[0] && timing[1]) {
-        fetch (`https://splits.tools/api/splits?g=${encodeURIComponent(game)}&c=${encodeURIComponent(category)}&s=${encodeURIComponent(splitCount)}&t=${encodeURIComponent("RTA, IGT")}`)
+        fetch (`https://splits.tools/api/splits?g=${encodeURIComponent(game)}&c=${encodeURIComponent(category)}&s=${encodeURIComponent(splitCount)}&t=${encodeURIComponent("RTA, IGT")}&v=${encodeURIComponent(variables)}`)
     } else if (timing[0]) {
-        fetch (`https://splits.tools/api/splits?g=${encodeURIComponent(game)}&c=${encodeURIComponent(category)}&s=${encodeURIComponent(splitCount)}&t=${encodeURIComponent("RTA")}`)
+        fetch (`https://splits.tools/api/splits?g=${encodeURIComponent(game)}&c=${encodeURIComponent(category)}&s=${encodeURIComponent(splitCount)}&t=${encodeURIComponent("RTA")}&v=${encodeURIComponent(variables)}`)
     } else {
-        fetch (`https://splits.tools/api/splits?g=${encodeURIComponent(game)}&c=${encodeURIComponent(category)}&s=${encodeURIComponent(splitCount)}&t=${encodeURIComponent("IGT")}`)
+        fetch (`https://splits.tools/api/splits?g=${encodeURIComponent(game)}&c=${encodeURIComponent(category)}&s=${encodeURIComponent(splitCount)}&t=${encodeURIComponent("IGT")}&v=${encodeURIComponent(variables)}`)
     }
 }
 
