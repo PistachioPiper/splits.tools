@@ -24,7 +24,7 @@ I would like to:
 - Add more customizability and accessibility to the tools present
 
 ## Who inspired me?
-- This was inspired primarily by [Splitmaker](https://minibeast.me/splitmaker/) by Minibeast
+- This was inspired primarily by [Splitmaker](https://minibeast.me/splitmaker/) by Mini
 - Additionally, [timeloss.run](https://timeloss.run) by Corvimae
 - Simple splits formula was inspired by [Source28's](https://twitter.com/Source28_) splits generator
 
@@ -33,7 +33,7 @@ I would like to:
 - Message me on Twitter [here](https://twitter.com/piperdumpy)
 
 ## Special thanks:
-- WamWooWam and Minibeast for assistance in learning JS, couldn't have done it without them
+- WamWooWam and Mini for assistance in learning JS, couldn't have done it without them
 
 - Various friends for supplying splits files to debug with
   - Mini
