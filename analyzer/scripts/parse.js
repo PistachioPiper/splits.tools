@@ -790,8 +790,8 @@ async function onDrop(ev) {
     let inputDiv = document.createElement('div')
     inputDiv.classList.add('inputDiv')
     inputDiv.innerHTML = `
-    <label>Use simple calculations for comparison <input name="simpBox" class="simpBox" onclick="simpTick()" type="checkbox"></label> 
-    <label>Use custom weighting (advanced) <input name="custBox"class="custBox" onclick="custTick()" type="checkbox"></label>
+    <label>(Optional) Simple Calculations <input name="simpBox" class="simpBox" onclick="simpTick()" type="checkbox"></label> 
+    <label>(Optional) Advanced Weighting <input name="custBox"class="custBox" onclick="custTick()" type="checkbox"></label>
     <br>
     <label class="custom-input hidden" >Weight values for: Average Timeloss/Reset Count/Split Length </label>
     <div class="custom-input hidden">
