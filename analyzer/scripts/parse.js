@@ -513,7 +513,7 @@ async function onDrop(ev) {
     }
 
     function compDownload() {
-        downloadLog(compCount)
+        compDownloadLog(compCount)
         let downloader = document.createElement('a');
         downloader.classList.add('hidden')
         downloader.setAttribute('download', fileName)
