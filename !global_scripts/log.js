@@ -19,6 +19,14 @@ function compGenLog(method) {
 }
 
 //number of comparisons
-function downloadLog(count) {
-    fetch (`/api/download?c=${count}`)
+function compDownloadLog(count) {
+    fetch (`/api/compdownload?c=${count}`)
+}
+
+//which file was downloaded
+function coreDownloadLog() {
+    fetch (`/api/moddownload?f=LiveSplitCore`)
+}
+function timerDownloadLog() {
+    fetch (`/api/moddownload?f=LiveSplitTimer`)
 }
