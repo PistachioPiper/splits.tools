@@ -22,11 +22,21 @@ function unconvert(secInput) {
 //converts SEC.MS to HH:MM:SS.MS
 function unconvert2DP(secInput) {
     if (secInput == null) {return ""}
-    let hmsSec = Number.parseFloat(secInput % 60).toFixed(2);
+    let hmsSec = (secInput % 60).toFixed(2);
     let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
     let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
+    if (hmsSec == 60) {
+        hmsSec = 0;
+        hmsMin = hmsMin + 1;
+    }
+    if (hmsMin == 60) {
+        hmsMin = 0;
+        hmsHrs = hmsMin + 1;
+    }
+
     let hmsOutput = hmsSec.toString().padStart(5, '0')
-    if (hmsMin !== 0) {hmsOutput = hmsMin.toString().padStart(2, '0') + ":" + hmsOutput}
-    if (hmsHrs !== 0) {hmsOutput = hmsHrs.toString().padStart(2, '0') + ":" + hmsOutput}
+    if (hmsMin !== 0 || hmsHrs !== 0) {hmsOutput = hmsMin.toString().padStart(2, '0') + ":" + hmsOutput}
+    if (hmsHrs !== 0) {hmsOutput = hmsHrs + ":" + hmsOutput}
+    console.log(Math.round(((secInput / 60) - (hmsSec / 60)) % 60))
     return hmsOutput
 }
