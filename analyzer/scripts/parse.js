@@ -11,53 +11,7 @@
 // await <-- can then be used
 //
 
-//converts HH:MM:SS.MS to SEC.MS
-function convert(hmsInput) {
-    if (hmsInput == null) {return null}
-    let hmsArray = hmsInput.split(":", 3)
-    let secOutput
-    if (hmsArray.length === 3) {secOutput = (parseInt(hmsArray[0]) * 3600) + (parseInt(hmsArray[1]) * 60) + parseFloat(hmsArray[2])}
-    if (hmsArray.length === 2) {secOutput = (parseInt(hmsArray[0]) * 60) + parseFloat(hmsArray[1])}
-    if (hmsArray.length === 1) {secOutput = parseFloat(hmsArray[0])}
-    return secOutput;
-}
 
-function unconvert(secInput) {
-    if (secInput == null) {return null}
-    let hmsSec = (secInput % 60).toFixed(6);
-    let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
-    let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
-    let hmsOutput = hmsHrs.toString().padStart(2, '0') + ":" + hmsMin.toString().padStart(2, '0') + ":" + hmsSec.toString().padStart(9, '0')
-    return hmsOutput
-}
-
-//converts SEC.MS to HH:MM:SS.MS
-function unconvert2DP(secInput) {
-    if (secInput == null) {return ""}
-    let hmsSec = Number.parseFloat(secInput % 60).toFixed(2);
-    let hmsMin = Math.round(((secInput / 60) - (hmsSec / 60)) % 60)
-    let hmsHrs = Math.round(((secInput / 3600) - (hmsMin / 60) - (hmsSec / 3600)) % 60)
-    let hmsOutput = hmsSec.toString().padStart(5, '0')
-    if (hmsMin !== 0) {hmsOutput = hmsMin.toString().padStart(2, '0') + ":" + hmsOutput}
-    if (hmsHrs !== 0) {hmsOutput = hmsHrs.toString().padStart(2, '0') + ":" + hmsOutput}
-    return hmsOutput
-}
-
-//clears the dropZone
-function dropZoneClear() {
-    let dropZone = document.querySelector(".drop-zone");
-    dropZone.innerHTML = "";
-}
-
-//sets a ptag with specified text
-function ptagSet(ptagText) {
-    let dropZone = document.querySelector(".drop-zone");
-    dropZone.innerHTML = "";
-    let pTag = document.createElement("p");
-    pTag.innerText = ptagText
-    pTag.classList.add("my-fancy-class");
-    dropZone.appendChild(pTag);
-}
 
 //toggles the table lol
 function tableToggle() {
@@ -165,34 +119,6 @@ function footerToggle() {
 }
 
 
-//TODO creates the statistics output
-function statsSet() {
-
-}
-
-
-
-//checks if the input file is an lss
-let fileName
-let fileExtension
-function filecheck(ev) {
-    if (ev.dataTransfer.files.length == 0) {
-        return 0
-    }
-    fileName = ev.dataTransfer.files[0].name
-    console.log(fileName)
-    let fileNameArray = fileName.split(".")
-    fileExtension = fileNameArray[fileNameArray.length - 1]
-    console.log(fileExtension)
-    
-    if (fileExtension !== "lss") {
-        console.log("File Extension Failure")
-        ptagSet("Please try again and make sure your file is a LiveSplit Splits file with the .lss extension.")
-        return 0;
-    }
-    return 1;
-}
-
 //handles checkboxes
 function simpTick() {
     if (document.querySelector(".simpBox").checked) {
@@ -255,7 +181,12 @@ function onDragOver(ev) {
 //yaboinga
 async function onDrop(ev) {
     ev.preventDefault();
-    if (filecheck(ev) == 0) {return}
+    
+    if (filecheck(ev) == 0) {
+        console.log("File Extension Failure")
+        ptagSet("Please try again and make sure your file is a LiveSplit Splits file with the .lss extension.")
+        return;
+    }
 
     //nukes dropzone on file drop
     let dropZone = document.querySelector(".drop-zone");
@@ -560,15 +491,7 @@ async function onDrop(ev) {
     }
     console.log("Category: " + gameCategory)
 
-    //sets background image (async)
-    let urlComponent = encodeURIComponent(gameName)
-    fetch(`https://www.speedrun.com/api/v1/games?name=${urlComponent}`)
-        .then((resp) => resp.json())
-        .then((x) => {
-            let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
-            document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
-            document.body.querySelector('div.background-image').style.backgroundSize = 'auto'
-        })
+    srcFetch(gameName)
     
     //attemptCount
     let attemptCount = splits.querySelectorAll('Attempt').length
@@ -576,9 +499,10 @@ async function onDrop(ev) {
 
 
     //check if RealTime/GameTime exist  
-    //painful cringe check frick you js
-    let rtaTiming = (splits.querySelector('Segments').querySelector("RealTime")?.textContent != null && splits.querySelector('Segments').querySelector("RealTime")?.textContent !== "00:00:00")
-    let igtTiming = (splits.querySelector('Segments').querySelector("GameTime")?.textContent != null && splits.querySelector('Segments').querySelector("GameTime")?.textContent !== "00:00:00")
+    //painful cringe check frick you js ()
+    let Segments = splits.querySelector('Segments')
+    let rtaTiming = (Segments.querySelector("RealTime")?.textContent != null && Segments.querySelector("RealTime")?.textContent !== "00:00:00")
+    let igtTiming = (Segments.querySelector("GameTime")?.textContent != null && Segments.querySelector("GameTime")?.textContent !== "00:00:00")
     let timingMethod = [rtaTiming, igtTiming];
     console.log("Timing Methods: " + "RTA=" + timingMethod[0] + " IGT=" + timingMethod[1])
     if (!timingMethod[0] && !timingMethod[1]){
@@ -819,7 +743,6 @@ async function onDrop(ev) {
     comparisonTag.addEventListener("click", compConstruct)
     tagWrapper.appendChild(comparisonTag);
 
-    statsSet()
 }
 
 

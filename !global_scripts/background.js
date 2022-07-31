@@ -27,3 +27,15 @@ if (Math.floor(Math.random() * 1000) !== 420) {
     source.textContent = image[randNum].name
     source.setAttribute("href", image[randNum].source)
 } else {ptagSet('i put my whole placeholdussy into this')}
+
+//sets background image (async)
+function srcFetch(gameName) {
+let urlComponent = encodeURIComponent(gameName)
+fetch(`https://www.speedrun.com/api/v1/games?name=${urlComponent}`)
+    .then((resp) => resp.json())
+    .then((x) => {
+        let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
+        document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
+        document.body.querySelector('div.background-image').style.backgroundSize = 'auto'
+    })
+}
