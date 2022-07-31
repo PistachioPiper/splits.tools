@@ -491,15 +491,7 @@ async function onDrop(ev) {
     }
     console.log("Category: " + gameCategory)
 
-    //sets background image (async)
-    let urlComponent = encodeURIComponent(gameName)
-    fetch(`https://www.speedrun.com/api/v1/games?name=${urlComponent}`)
-        .then((resp) => resp.json())
-        .then((x) => {
-            let imgUrl = x['data'][0]['assets']['cover-large']['uri'];
-            document.body.querySelector('div.background-image').style.backgroundImage = `url(${imgUrl})`
-            document.body.querySelector('div.background-image').style.backgroundSize = 'auto'
-        })
+    srcFetch(gameName)
     
     //attemptCount
     let attemptCount = splits.querySelectorAll('Attempt').length
